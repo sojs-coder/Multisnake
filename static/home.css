@@ -1,0 +1,58 @@
+.column{
+  display: flex;
+  flex-direction: column;
+  float: center;
+}
+.dimmed{
+  background-color: rgba(0, 0, 0, 0.50);
+  width: 100%;
+  height: 100%;
+  z-index:-99;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.background{
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  z-index: -99;
+}
+video{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+}
+.row{
+  z-index: 999;
+  display: flex;
+  flex-direction: row;
+  float: center;
+}
+input[type="text"]{
+  border: 3px solid lightgrey;
+  padding: 2px;
+  border-radius: 6px;
+}
+input[type="submit"]{
+  transition-duration: 1s;
+  background-color: green;
+  color: white;
+  border: 3px solid green;
+  padding: 5px;
+  border-radius: 6px;
+  
+}
+input[type="submit"]:hover{
+  background-color: white;
+  color: green;
+}
+body{
+  color: white; 
+  background-color: black;
+}

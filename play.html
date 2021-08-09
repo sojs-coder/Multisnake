@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>MultiSnake</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+</script>
+  </head>
+  <body id = "body">
+    <div id = "alert-box"></div>
+    <div class = "row">
+      <div class = "column leaders">
+        <div class = "apples"><span id = "score"></span> 🍎</div>
+        <h1>Leaderboard</h1>
+        <div id = "leaders"></div>
+        <h2>Stats:</h2>
+        
+        <div class = "FPS">FPS: <span id = "fps"></span></div>
+      </div>
+    <table id = "table"></table>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
