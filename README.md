@@ -35,3 +35,7 @@ Add pull requests if you have ideas for seperate rooms (Working on that currentl
 
 
 If you just came here because you looked up multisnake and this popped up, dont worry, play the game [here](https://multisnake.sojs.dev)
+
+## Submitting Issues
+
+Just submit them. Or, save me some time :smile:, and create a pull request with the issue already fixed.
