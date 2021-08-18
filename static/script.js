@@ -2,6 +2,7 @@ const queryString = window.location.search;
   var searchObj = new URLSearchParams(queryString);
   var username = searchObj.get('username') || "multisnake"
   var room = searchObj.get('room') || "public"
+  window.room = room;
   socket.emit('joining',{
     "name":username,
     "room":room
@@ -165,7 +166,8 @@ document.addEventListener('keydown',(e)=>{
   if(e.which == 32){
     socket.emit('speed',{
       "id":thisSnakeID,
-      "press": true
+      "press": true,
+      "room":window.room
     });
   }
 });
@@ -173,14 +175,16 @@ document.addEventListener('keyup',(e)=>{
   if(e.which == 32){
     socket.emit('speed',{
       "id":thisSnakeID,
-      "press": false
+      "press": false,
+      "room":window.room
     })
   }
 })
 function changeDir(dir){
   socket.emit('direction',{
     "id": thisSnakeID,
-    "dir":dir
+    "dir":dir,
+    "room":window.room
   })
 }
 
