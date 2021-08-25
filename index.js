@@ -124,7 +124,7 @@ function initGame(){
             }
             
           });
-          if(rooms[room.key].snakes[id].score == 50 && !win){
+          if(rooms[room.key].snakes[id].score == 15 && !win){
             win = true
           }
           rooms[room.key].snakes.forEach((otherSnake)=>{
@@ -296,7 +296,7 @@ function spawnBlock(room){
       var blockY = Math.round((Math.random() * (23 - 1)) + 1);
       rooms[room].blocks.push([blockX,blockY])
     }else{
-        var pickedblock = rooms[room].blocks[Math.floor(Math.random()*blocks.length)];
+        var pickedblock = rooms[room].blocks[Math.floor(Math.random()*rooms[room].blocks.length)];
       var newblock = [];
       switch(side){
         case 0:
@@ -368,7 +368,7 @@ function sendBoard(){
   }
 function is_block_occupied(target,room){
   var foundblocks = rooms[room].blocks.find((elem)=>{
-    return (target[0] == elem[0] && target[1] == elem[1]) || (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1]);
+    return (target[0] == elem[0] && target[1] == elem[1]) || (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1] || [2,2][0] == elem[0] && [2,2][1] == elem[1]);
   });
   return (foundblocks) ? true : false;
 }
