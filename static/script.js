@@ -63,7 +63,7 @@ socket.on('win',(snake)=>{
   if(snake.id == thisSnakeID){
     alert('<h1>You Win!</h1>',location.reload);
   }else{
-    alert('<h1>You Finished '+currplace+'</h1>The winner of this round was "'+snake.username+'"<p>', location.reload)
+    alert('<h1>You Finished '+ currplace+1 +'</h1>The winner of this round was "'+snake.username+'"<p>', location.reload)
   }
 });
 socket.on('board',(data)=>{

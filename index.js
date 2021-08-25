@@ -90,9 +90,9 @@ function initGame(){
     movePlayers();
     checkwin();
     sendBoard();
+    clearWinBoard();
     var delta2 = new Date().getTime();
     var delta3 = delta2-delta;
-    console.log(250-delta3);
     setTimeout(initGame, Math.max(250-delta3,10));
   }
   function checkwin(){
@@ -125,7 +125,9 @@ function initGame(){
             
           });
           if(rooms[room.key].snakes[id].score == 15 && !win){
-            win = true
+            io.to(room.key).emit('win',rooms[room.key].snakes[id]);
+            gamesStarted = false;
+            rooms[room.key].win = true
           }
           rooms[room.key].snakes.forEach((otherSnake)=>{
             if(otherSnake.blocks){
@@ -159,11 +161,6 @@ function initGame(){
           if(dead == true){
             io.to(room.key).emit('death',id);
             rooms[room.key].snakes.splice(id,1,'dead_snake');
-          }else if(win == true){
-            io.to(room.key).emit('win',rooms[room.key].snakes[id]);
-            gamesStarted = false;
-
-            rooms[room.key].snakes = [];
           }
           }
         });
@@ -189,13 +186,10 @@ function initGame(){
           var dir = snake.dir;
           var toPop = 0;
           if(snake.speed > 1){
-            console.log('speeding...')
             if(snake.blocks.length > 1){
-              console.log('legal')
               rooms[room.key].snakes[id].score -= 1;
               toPop++;
             }else{
-              console.log('ilegal')
               rooms[room.key].snakes[id].speed = 1;
               snake.speed = 1;
             }
@@ -382,7 +376,16 @@ function json2array(json){
     });
     return result;
 }
-
+function clearWinBoard(){
+  var rooms1 = json2array(rooms);
+  rooms1.forEach((room)=>{
+    if(room.win){
+      rooms[room.key].snakes = [];
+      rooms[room.key].blocks = [];
+      rooms[room.key].win = false;
+    }
+  })
+}
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
