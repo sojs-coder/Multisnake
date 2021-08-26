@@ -9,7 +9,7 @@ var gamesStarted = false;
 
 var rooms = {
   "public":{
-    "snakes":[],
+    "snakes":['dead_snake'],
     "blocks":[],
     "apple":[10,10],
     "started":false,
@@ -17,14 +17,16 @@ var rooms = {
     "base_points_to_next_obs":20
   }
 }
-
+function getName(){
+  return "Multisnake"
+}
 io.on('connection', (socket) => {
   console.log('a user connected');
   
   socket.on('joining',(data)=>{
     
-    
-    var roomtojoin = data.room;
+    var roomtojoin = (data) ? data.room || "public" : "public";
+    var username = (data) ? data.name || getName() : getName();
     if(rooms[roomtojoin]){
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -34,13 +36,13 @@ io.on('connection', (socket) => {
         "score":0,
         "eating":false,
         "dir":2,
-        "username":data.name,
+        "username": username,
         "speed":1
       });
       io.emit('joined',id);
     }else{
       rooms[roomtojoin] = {
-        "snakes":[],
+        "snakes":['dead_snake'],
         "blocks":[],
         "apple":[10,10],
         "started":false,
@@ -65,20 +67,34 @@ io.on('connection', (socket) => {
       rooms[roomtojoin].started = true;
       initGame();
     }
-    
   });
   socket.on('speed',(data)=>{
-
-    if(rooms[data.room].snakes[data.id] !== "dead_snake" && rooms[data.room].snakes[data.id]){
-      rooms[data.room].snakes[data.id].speed = (data.press) ? 2 : 1;
-      
+    var room = (data) ? data.room || "public" : "public";
+    var id = (data) ?  data.id  || " " : " ";
+    var press = (data) ? (data.press || false) : false;
+    if(rooms[room]){
+      if(rooms[room].snakes[id]){
+        if(rooms[room].snakes[id] !== "dead_snake" && rooms[room].snakes[id]){
+          rooms[room].snakes[id].speed = (press) ? 2 : 1;
+          
+        }
+      }
     }
+    
   })
   
   socket.on('direction',(data)=>{
-    if(rooms[data.room].snakes[data.id] !== "dead_snake" && rooms[data.room].snakes[data.id]){
-      rooms[data.room].snakes[data.id].dir = data.dir;
+    var room = (data) ? data.room || "public" : "public";
+    var id = (data) ? data.id || " " : " ";
+    var dir = (data) ? data.dir || 1 : 1;
+    if(rooms[room]){
+      if(rooms[room].snakes[id]){
+        if(rooms[data.room].snakes[data.id] !== "dead_snake" && rooms[data.room].snakes[data.id]){
+          rooms[data.room].snakes[data.id].dir = data.dir;
+        }
+      }
     }
+    
   })
   socket.on('disconnect', () => {
     console.log('user disconnected');
@@ -283,6 +299,7 @@ function initGame(){
   }
 
 function spawnBlock(room){
+  if(rooms[room]){
   if(odds(0.5)){
     var side = Math.round(Math.random()*3);
     if(!rooms[room].blocks[0]){
@@ -341,6 +358,7 @@ function spawnBlock(room){
     }else{
       spawnBlock(room)
     }
+  }
   }
 }
 function scale2board(number){

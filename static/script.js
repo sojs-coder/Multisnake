@@ -9,7 +9,31 @@ const queryString = window.location.search;
   });
 
 
-
+function getRandomName(){
+  var start = [
+    'flying',
+    'blue',
+    'pink',
+    'jumping',
+    'invisible',
+    'red',
+    'dancing',
+    'running',
+    'yellow'
+  ];
+  var end = [
+    'Tangerine',
+    'Orange',
+    'Helicopter',
+    'Snake',
+    'Toad',
+    'Ninja',
+    'Goose',
+    'Banana',
+    'Duck'
+  ];
+  //var end = 
+}
 window.lastTime = new Date().getTime()
 var by = 25;
 var currplace = 0;
@@ -30,21 +54,21 @@ window.alert = (html,cb)=>{
   }
   
 }
-for(var i = 0; i < by; i++){
-  var tr = document.createElement('tr');
-  for(var j = 0; j < by; j++){
-    
-    var td = document.createElement('td');
-    td.id = j+'-'+i;
-    td.innerHTML = "&nbsp;"
-    td.style = "width: 20px; height: 10px;";
-    if(j == 0 || j == 24 || i==0 || i == 24){
-      td.style.backgroundColor = "rgb(28, 49, 35)"
+  for(var i = 0; i < by; i++){
+    var tr = document.createElement('tr');
+    for(var j = 0; j < by; j++){
+      
+      var td = document.createElement('td');
+      td.id = j+'-'+i;
+      td.innerHTML = "&nbsp;"
+      td.style = "width: 20px; height: 10px;";
+      if(j == 0 || j == 24 || i==0 || i == 24){
+        td.style.backgroundColor = "rgb(28, 49, 35)"
+      }
+      tr.appendChild(td);
     }
-    tr.appendChild(td);
+    document.getElementById('table').appendChild(tr)
   }
-  document.getElementById('table').appendChild(tr)
-}
 
 socket.on('joined',(id)=>{
   if(!joined && !thisSnakeID){
@@ -63,7 +87,7 @@ socket.on('win',(snake)=>{
   if(snake.id == thisSnakeID){
     alert('<h1>You Win!</h1>',location.reload);
   }else{
-    alert('<h1>You Finished '+ currplace+1 +'</h1>The winner of this round was "'+snake.username+'"<p>', location.reload)
+    alert('<h1>You Finished '+ (parseInt(currplace)+1).toString() +'</h1>The winner of this round was "'+snake.username+'"<p>', location.reload)
   }
 });
 socket.on('board',(data)=>{
