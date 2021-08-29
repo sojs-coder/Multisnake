@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         "username": username,
         "speed":1
       });        
-      io.emit('joined',id);
+      io.to(roomtojoin).emit('joined',id);
     }else{
       rooms[roomtojoin] = {
         "snakes":['dead_snake'],
@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
         "username":data.name,
         "speed":1
       });
-      io.emit('joined',id);
+      io.to(roomtojoin).emit('joined',id);
     }
     
     if(!rooms["public"].started){
@@ -104,19 +104,25 @@ io.on('connection', (socket) => {
 });
 function initGame(){
     var delta = new Date().getTime();
-    movePlayers();
-    checkwin();
-    sendBoard();
-    clearWinBoard();
+    var rooms1 = json2array(rooms);
+    rooms1.forEach((room)=>{
+      room.snakes.forEach((snake)=>{
+        if(snake!== "dead_snake"){
+          movePlayers(room.key,snake.id);
+          checkwin(room.key, snake.id);
+          
+        }
+      })
+      sendBoard(room.key, 0);
+      clearWinBoard(room.key, 0);
+    })
+    
     var delta2 = new Date().getTime();
     var delta3 = delta2-delta;
     setTimeout(initGame, Math.max(250-delta3,10));
   }
-  function checkwin(){
-    var rooms1 = json2array(rooms);
-    rooms1.forEach((room)=>{
-      rooms[room.key].snakes.forEach((snake,id)=>{
-          if(snake !== 'dead_snake'){
+  function checkwin(roomkey,id){
+          var snake = rooms[roomkey].snakes[id];
           snake = snake.blocks;
           var snakeHead = snake[0];
           var dead = false;
@@ -135,25 +141,25 @@ function initGame(){
               }
             }
           });
-          rooms[room.key].blocks.forEach((block, i)=>{
+          rooms[roomkey].blocks.forEach((block, i)=>{
             if(block[0] == snakeHead[0] && block[1] == snakeHead[1]){
               dead = true;
             }
             
           });
-          if(rooms[room.key].snakes[id].score == 15 && !win){
-            io.to(room.key).emit('win',rooms[room.key].snakes[id]);
+          if(rooms[roomkey].snakes[id].score == 15 && !win){
+            io.to(roomkey).emit('win',rooms[roomkey].snakes[id]);
             gamesStarted = false;
-            rooms[room.key].win = true
+            rooms[roomkey].win = true
           }
-          rooms[room.key].snakes.forEach((otherSnake)=>{
+          rooms[roomkey].snakes.forEach((otherSnake)=>{
             if(otherSnake.blocks){
               if(otherSnake.id !== id){
                 otherSnake.blocks.forEach((enemyBlock,enemyBlockNumber)=>{
                   if(enemyBlockNumber == 0 && enemyBlock[0] == snakeHead[0] && enemyBlock[1] == snakeHead[1]){
                     dead = true;
-                    io.emit('death',otherSnake.id);
-                    rooms[room.key].snakes.splice(otherSnake.id,1,'dead_snake');
+                    io.to(roomkey).emit('death',otherSnake.id);
+                    rooms[roomkey].snakes.splice(otherSnake.id,1,'dead_snake');
                   }else if(enemyBlock[0] == snakeHead[0] && enemyBlock[1] == snakeHead[1]){
                     dead = true;
                   }
@@ -161,27 +167,24 @@ function initGame(){
               }
             }
           });
-          if(rooms[room.key].apple[0] == snakeHead[0] && rooms[room.key].apple[1] == snakeHead[1]){
-            rooms[room.key].snakes[id].score +=1;
+          if(rooms[roomkey].apple[0] == snakeHead[0] && rooms[roomkey].apple[1] == snakeHead[1]){
+            rooms[roomkey].snakes[id].score +=1;
             var newAppleX, newAppleY;
-            var applepos = getNewApplePos(room.key);
+            var applepos = getNewApplePos(roomkey);
             
-            rooms[room.key].apple = applepos;
-            if(rooms[room.key].points_to_next_obs == 0){
-              spawnBlock(room.key);
-              rooms[room.key].points_to_next_obs = rooms[room.key].base_points_to_next_obs
+            rooms[roomkey].apple = applepos;
+            if(rooms[roomkey].points_to_next_obs == 0){
+              spawnBlock(roomkey);
+              rooms[roomkey].points_to_next_obs = rooms[roomkey].base_points_to_next_obs
             }else{
-              rooms[room.key].points_to_next_obs -=1;
+              rooms[roomkey].points_to_next_obs -=1;
             }
-            rooms[room.key].snakes[id].eating = true;
+            rooms[roomkey].snakes[id].eating = true;
           }
           if(dead == true){
-            io.to(room.key).emit('death',id);
-            rooms[room.key].snakes.splice(id,1,'dead_snake');
+            io.to(roomkey).emit('death',id);
+            rooms[roomkey].snakes.splice(id,1,'dead_snake');
           }
-          }
-        });
-    })
     
     
   }
@@ -195,19 +198,16 @@ function initGame(){
     }
     
   }
-  function movePlayers(){
-    var rooms1 = json2array(rooms);
-    rooms1.forEach((room)=>{
-      rooms[room.key].snakes.forEach((snake,id)=>{
-        if(snake !== "dead_snake"){
+  function movePlayers(roomkey,id){
+          var snake = rooms[roomkey].snakes[id];
           var dir = snake.dir;
           var toPop = 0;
           if(snake.speed > 1){
             if(snake.blocks.length > 1){
-              rooms[room.key].snakes[id].score -= 1;
+              rooms[roomkey].snakes[id].score -= 1;
               toPop++;
             }else{
-              rooms[room.key].snakes[id].speed = 1;
+              rooms[roomkey].snakes[id].speed = 1;
               snake.speed = 1;
             }
           }
@@ -221,17 +221,17 @@ function initGame(){
               
               
               for(var i = 0; i < speed; i++){
-                var snakeHead = rooms[room.key].snakes[id].blocks[0];
+                var snakeHead = rooms[roomkey].snakes[id].blocks[0];
                 var newCoordsX = snakeHead[0];
                 var newCoordsY = snakeHead[1];
                 newCoordsY -= 1;
-                rooms[room.key].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
+                rooms[roomkey].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
               }
               for(var i = 0; i < toPop; i++){
-                if(!rooms[room.key].snakes[id].eating){
-                  rooms[room.key].snakes[id].blocks.pop();
+                if(!rooms[roomkey].snakes[id].eating){
+                  rooms[roomkey].snakes[id].blocks.pop();
                 }else{
-                  rooms[room.key].snakes[id].eating = false;
+                  rooms[roomkey].snakes[id].eating = false;
                 }
                 
               }
@@ -240,17 +240,17 @@ function initGame(){
             case 2:
             
               for(var i = 0; i < speed; i++){
-                var snakeHead = rooms[room.key].snakes[id].blocks[0];
+                var snakeHead = rooms[roomkey].snakes[id].blocks[0];
                 var newCoordsX = snakeHead[0];
                 var newCoordsY = snakeHead[1];
                 newCoordsX += 1;
-                rooms[room.key].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
+                rooms[roomkey].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
               }
               for(var i = 0; i < toPop; i++){
-                if(!rooms[room.key].snakes[id].eating){
-                  rooms[room.key].snakes[id].blocks.pop();
+                if(!rooms[roomkey].snakes[id].eating){
+                  rooms[roomkey].snakes[id].blocks.pop();
                 }else{
-                  rooms[room.key].snakes[id].eating = false;
+                  rooms[roomkey].snakes[id].eating = false;
                 }
                 
               }
@@ -259,17 +259,17 @@ function initGame(){
             case 3:
               
               for(var i = 0; i < speed; i++){
-                var snakeHead = rooms[room.key].snakes[id].blocks[0];
+                var snakeHead = rooms[roomkey].snakes[id].blocks[0];
                 var newCoordsX = snakeHead[0];
                 var newCoordsY = snakeHead[1];
                 newCoordsY += 1;
-                rooms[room.key].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
+                rooms[roomkey].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
               }
               for(var i = 0; i < toPop; i++){
-                if(!rooms[room.key].snakes[id].eating){
-                  rooms[room.key].snakes[id].blocks.pop();
+                if(!rooms[roomkey].snakes[id].eating){
+                  rooms[roomkey].snakes[id].blocks.pop();
                 }else{
-                  rooms[room.key].snakes[id].eating = false;
+                  rooms[roomkey].snakes[id].eating = false;
                 }
                 
               }
@@ -277,26 +277,23 @@ function initGame(){
               break;
             case 4:
               for(var i = 0; i < speed; i++){
-                var snakeHead = rooms[room.key].snakes[id].blocks[0];
+                var snakeHead = rooms[roomkey].snakes[id].blocks[0];
                 var newCoordsX = snakeHead[0];
                 var newCoordsY = snakeHead[1];
                 newCoordsX -= 1;
-                rooms[room.key].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
+                rooms[roomkey].snakes[id].blocks.unshift([newCoordsX,newCoordsY]);
               }
               for(var i = 0; i < toPop; i++){
-                if(!rooms[room.key].snakes[id].eating){
-                  rooms[room.key].snakes[id].blocks.pop();
+                if(!rooms[roomkey].snakes[id].eating){
+                  rooms[roomkey].snakes[id].blocks.pop();
                 }else{
-                  rooms[room.key].snakes[id].eating = false;
+                  rooms[roomkey].snakes[id].eating = false;
                 }
                 
               }
               
               break;
           }
-          } 
-        });
-    })
   }
 
 function spawnBlock(room){
@@ -368,17 +365,14 @@ function scale2board(number){
 function odds(odd){
   return (Math.random() < odd)
 }
-function sendBoard(){
-  var rooms2send2 = json2array(rooms);
-  rooms2send2.forEach((room)=>{
-    io.to(room.key).emit('board',{
-      "snakes":rooms[room.key].snakes,
-      "apple":rooms[room.key].apple,
-      "walls":rooms[room.key].blocks
+function sendBoard(roomkey,id){
+    io.to(roomkey).emit('board',{
+      "snakes":rooms[roomkey].snakes,
+      "apple":rooms[roomkey].apple,
+      "walls":rooms[roomkey].blocks
     });
-  })
     
-  }
+}
 function is_block_occupied(target,room){
   var foundblocks = rooms[room].blocks.find((elem)=>{
     return (target[0] == elem[0] && target[1] == elem[1]) || (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1] || [2,2][0] == elem[0] && [2,2][1] == elem[1]);
@@ -395,15 +389,13 @@ function json2array(json){
     });
     return result;
 }
-function clearWinBoard(){
-  var rooms1 = json2array(rooms);
-  rooms1.forEach((room)=>{
+function clearWinBoard(roomkey,id){
+  var room = rooms[roomkey];
     if(room.win){
-      rooms[room.key].snakes = [];
-      rooms[room.key].blocks = [];
-      rooms[room.key].win = false;
+      rooms[roomkey].snakes = [];
+      rooms[roomkey].blocks = [];
+      rooms[roomkey].win = false;
     }
-  })
 }
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');

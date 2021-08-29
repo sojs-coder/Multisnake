@@ -9,7 +9,11 @@ const queryString = window.location.search;
     "room":room
   });
 function reverse(num){
-  return num+2;
+  if(num+2 > 4){
+    return num - 2 
+  }else{
+    return num+2;
+  }
 }
 
 function getRandomName(){
