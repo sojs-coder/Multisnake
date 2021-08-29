@@ -3,11 +3,14 @@ const queryString = window.location.search;
   var username = searchObj.get('username') || "multisnake"
   var room = searchObj.get('room') || "public"
   window.room = room;
+  window.direction = 2;
   socket.emit('joining',{
     "name":username,
     "room":room
   });
-
+function reverse(num){
+  return num+2;
+}
 
 function getRandomName(){
   var start = [
@@ -98,7 +101,7 @@ socket.on('board',(data)=>{
 
   var allSnakes = data.snakes;
   updateLeaders(allSnakes);
-  getBlock(data.apple[0],data.apple[1]).style.backgroundColor = "red";
+  getBlock(data.apple[0],data.apple[1]).innerHTML = "🍎";
   allSnakes.forEach((snake)=>{
     if(snake !== "dead_snake"){
       if(snake.id == thisSnakeID){
@@ -158,9 +161,11 @@ function clearBoard(){
     for(var j = 0; j < by; j++){
       if(j == 0 || j == 24 || i==0 || i == 24){
         getBlock(j,i).style.backgroundColor = "white"
+
       }else{
         getBlock(j,i).style.backgroundColor = "black";
       }
+      getBlock(j,i).innerHTML = "&nbsp;"
     }
     document.getElementById('table').appendChild(tr)
   }
@@ -176,13 +181,30 @@ function getBlock(x,y){
 document.addEventListener('keydown',(e)=>{
   if(!window.dead){
     if(e.which == 87 || e.which == 38){
-      changeDir(1)
+      if(reverse(window.direction) !== 1){
+        changeDir(1)
+        window.direction = 1;
+
+      }
+      
     }else if(e.which == 68 || e.which ==39){
-      changeDir(2)
+      if(reverse(window.direction) !== 2){
+        changeDir(2)
+        window.direction = 2;
+
+      }      
     }else if(e.which == 83 || e.which == 40){
-      changeDir(3)
+      if(reverse(window.direction) !== 3){
+        
+        changeDir(3)
+        window.direction = 3;
+      }
+      
     }else if(e.which == 65 || e.which == 37){
-      changeDir(4)
+      if(reverse(window.direction) !== 4){
+        window.direction = 4;
+        changeDir(4)
+      }
     }
   }
 });
@@ -205,11 +227,11 @@ document.addEventListener('keyup',(e)=>{
   }
 })
 function changeDir(dir){
-  socket.emit('direction',{
-    "id": thisSnakeID,
-    "dir":dir,
-    "room":window.room
-  })
+    socket.emit('direction',{
+      "id": thisSnakeID,
+      "dir":dir,
+      "room":window.room
+    });
 }
 
 function updateFPS(){

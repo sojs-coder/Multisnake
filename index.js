@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
         "dir":2,
         "username": username,
         "speed":1
-      });
+      });        
       io.emit('joined',id);
     }else{
       rooms[roomtojoin] = {
@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
         }
       }
     }
-    
+  
   })
   
   socket.on('direction',(data)=>{
@@ -91,6 +91,7 @@ io.on('connection', (socket) => {
       if(rooms[room].snakes[id]){
         if(rooms[data.room].snakes[data.id] !== "dead_snake" && rooms[data.room].snakes[data.id]){
           rooms[data.room].snakes[data.id].dir = data.dir;
+          
         }
       }
     }
