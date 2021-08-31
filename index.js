@@ -13,8 +13,8 @@ var rooms = {
     "blocks":[],
     "apple":[10,10],
     "started":false,
-    "points_to_next_obs": 20,
-    "base_points_to_next_obs":20
+    "points_to_next_obs": 5,
+    "base_points_to_next_obs":5
   }
 }
 function getName(){
@@ -46,8 +46,8 @@ io.on('connection', (socket) => {
         "blocks":[],
         "apple":[10,10],
         "started":false,
-        "points_to_next_obs": 20,
-        "base_points_to_next_obs":20
+        "points_to_next_obs": 5,
+        "base_points_to_next_obs":5
       }
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -119,7 +119,7 @@ function initGame(){
     
     var delta2 = new Date().getTime();
     var delta3 = delta2-delta;
-    setTimeout(initGame, Math.max(250-delta3,10));
+    setTimeout(initGame, Math.max(200-delta3,10));
   }
   function checkwin(roomkey,id){
           var snake = rooms[roomkey].snakes[id];
@@ -375,8 +375,17 @@ function sendBoard(roomkey,id){
 }
 function is_block_occupied(target,room){
   var foundblocks = rooms[room].blocks.find((elem)=>{
-    return (target[0] == elem[0] && target[1] == elem[1]) || (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1] || [2,2][0] == elem[0] && [2,2][1] == elem[1]);
+    return ((target[0] == elem[0]) && (target[1] == elem[1]))
   });
+  if(target[0] == rooms[room].apple[0] && target[1] == rooms[room].apple[1]){
+    return true;
+  }
+  if(target[0] == 2 && target[1] == 2){
+    return true;
+  }
+  if(target[0] == 3 && target[1] == 2){
+    return true;
+  }
   return (foundblocks) ? true : false;
 }
 function json2array(json){
