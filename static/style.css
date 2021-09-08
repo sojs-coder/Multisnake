@@ -52,3 +52,6 @@ td{
   display: inline-block;
   padding: 3px;
 }
+img[src="/social_rumbles_promo.png"]{
+  border-radius: 12px;
+}

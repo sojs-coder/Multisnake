@@ -3,6 +3,7 @@ const queryString = window.location.search;
   var username = searchObj.get('username') || getRandomName()
   var room = searchObj.get('room') || "public"
   window.room = room;
+  window.game = {}
   window.direction = 2;
   socket.emit('joining',{
     "name":username,
@@ -17,6 +18,12 @@ function reverse(num){
   }else{
     return num+2;
   }
+}
+function startTimer(){
+  window.game.started = new Date().getTime();
+}
+function endTimer(){
+  return (new Date().getTime() - window.game.started);
 }
 function getRandomName(){
   var start = [
@@ -85,21 +92,42 @@ window.alert = (html,cb)=>{
 socket.on('joined',(id)=>{
   if(!joined && !thisSnakeID){
     thisSnakeID = id;
-
+    startTimer();
     joined = true;
   }
 });
+function getFormatGameTime(){
+  return Math.round(endTimer()/1000);
+}
 socket.on('death',(id)=>{
   if(id == thisSnakeID){
     window.dead = true;
-    alert('<h1>You Died!</h1>',location.reload);
+    var time = getFormatGameTime()
+    alert(`<h1>You Died!</h1><p>Your final score was ${window.game.score}. Your time was ${time} seconds. Nice Job</p><h2>Share your score...</h2>
+    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
+      <div style = "font-size:50px">
+        <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
+        <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
+      </div>`,location.reload);
   }
 });
 socket.on('win',(snake)=>{
   if(snake.id == thisSnakeID){
-    alert('<h1>You Win!</h1>',location.reload);
+    var time = getFormatGameTime()
+    alert(`<h1>You Win!</h1><p>You won in  ${time} seconds. <b>Nice Job</b></p><h2>Share your win...</h2>
+    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
+      <div style = "font-size:50px">
+        <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
+        <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
+      </div>`,location.reload);
   }else{
-    alert('<h1>You Finished '+ (parseInt(currplace)+1).toString() +'</h1>The winner of this round was "'+snake.username+'"<p>', location.reload)
+    var time = getFormatGameTime()
+    alert(`<h1>You Finished ${(parseInt(currplace)+1).toString()}</h1>The winner of this round was "${snake.username}"<p><p>Your final score was ${window.game.score}. Your time was ${time} seconds. Nice Job...</p><h2>Share your score...</h2>
+    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
+      <div style = "font-size:50px">
+        <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
+        <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
+      </div>`, location.reload)
   }
 });
 socket.on('board',(data)=>{
@@ -156,6 +184,7 @@ function updateLeaders(snakes){
       if(snake.id == thisSnakeID){
         document.getElementById('score').innerHTML = snake.score;
         container.id = "player";
+        window.game.score = snake.score
         currplace = i;
       }
       container.classList.add('leader');

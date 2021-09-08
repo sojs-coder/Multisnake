@@ -44,9 +44,10 @@ function getName(){
   var ending = start[Math.floor(Math.random()* start.length)] + end[Math.floor(Math.random()*end.length)] + Math.round(Math.random() * 100);
   return ending;
 }
+initGame()
 io.on('connection', (socket) => {
   console.log('a user connected');
-  
+
   socket.on('joining',(data)=>{
     
     var roomtojoin = (data) ? data.room || "public" : "public";
@@ -62,7 +63,8 @@ io.on('connection', (socket) => {
         "dir":2,
         "username": username,
         "speed":1
-      });        
+      });
+      rooms[roomtojoin].lastvisited = new Date().getTime();
       io.to(roomtojoin).emit('joined',id);
     }else{
       rooms[roomtojoin] = {
@@ -71,7 +73,8 @@ io.on('connection', (socket) => {
         "apple":[10,10],
         "started":false,
         "points_to_next_obs": 5,
-        "base_points_to_next_obs":5
+        "base_points_to_next_obs":5,
+        "lastvisited": new Date().getTime()
       }
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -86,11 +89,7 @@ io.on('connection', (socket) => {
       });
       io.to(roomtojoin).emit('joined',id);
     }
-    
-    if(!rooms["public"].started){
-      rooms[roomtojoin].started = true;
-      initGame();
-    }
+  
   });
   socket.on('speed',(data)=>{
     var room = (data) ? data.room || "public" : "public";
@@ -126,10 +125,20 @@ io.on('connection', (socket) => {
   });
   
 });
+function resetRoom(roomkey){
+  rooms[roomkey].apple = [10,10];
+  rooms[roomkey].blocks = [];
+  rooms[roomkey].snakes = ['dead_snake'];
+  rooms[roomkey].started = false;
+  rooms
+}
 function initGame(){
     var delta = new Date().getTime();
     var rooms1 = json2array(rooms);
     rooms1.forEach((room)=>{
+      if((new Date().getTime() - room.lastvisited)/1000/60 > 1){
+        resetRoom(room.key);
+      }
       room.snakes.forEach((snake)=>{
         if(snake !== "dead_snake"){
           movePlayers(room.key,snake.id);
@@ -143,7 +152,7 @@ function initGame(){
     var delta2 = new Date().getTime();
     var delta3 = delta2-delta;
     console.log(delta3)
-    setTimeout(initGame, Math.max(150-delta3,10));
+    setTimeout(initGame, Math.max(100-delta3,10));
   }
   function checkwin(roomkey,id){
           var snake = rooms[roomkey].snakes[id];
@@ -175,7 +184,7 @@ function initGame(){
           if(rooms[roomkey].snakes[id].score == 10 && !win){
             io.to(roomkey).emit('win',rooms[roomkey].snakes[id]);
             gamesStarted = false;
-            rooms[roomkey].win = true
+            rooms[roomkey].win = true;
           }
           rooms[roomkey].snakes.forEach((otherSnake)=>{
             if(otherSnake.blocks){
@@ -435,8 +444,9 @@ function json2array(json){
 function clearWinBoard(roomkey,id){
   var room = rooms[roomkey];
     if(room.win){
-      rooms[roomkey].snakes = [];
+      rooms[roomkey].snakes = ['dead_snake'];
       rooms[roomkey].blocks = [];
+      rooms[roomkey].apple = [10,10];
       rooms[roomkey].win = false;
     }
 }
