@@ -14,11 +14,35 @@ var rooms = {
     "apple":[10,10],
     "started":false,
     "points_to_next_obs": 5,
-    "base_points_to_next_obs":5
+    "base_points_to_next_obs":5,
+    "lastvisited": new Date().getTime()
   }
 }
 function getName(){
-  return "Multisnake"
+  var start = [
+    'flying',
+    'blue',
+    'pink',
+    'jumping',
+    'invisible',
+    'red',
+    'dancing',
+    'running',
+    'yellow'
+  ];
+  var end = [
+    'Tangerine',
+    'Orange',
+    'Helicopter',
+    'Snake',
+    'Toad',
+    'Ninja',
+    'Goose',
+    'Banana',
+    'Duck'
+  ];
+  var ending = start[Math.floor(Math.random()* start.length)] + end[Math.floor(Math.random()*end.length)] + Math.round(Math.random() * 100);
+  return ending;
 }
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -107,22 +131,23 @@ function initGame(){
     var rooms1 = json2array(rooms);
     rooms1.forEach((room)=>{
       room.snakes.forEach((snake)=>{
-        if(snake!== "dead_snake"){
+        if(snake !== "dead_snake"){
           movePlayers(room.key,snake.id);
           checkwin(room.key, snake.id);
-          
+          clearWinBoard(room.key, snake.id);
         }
       })
-      sendBoard(room.key, 0);
-      clearWinBoard(room.key, 0);
+      sendBoard(room.key);
     })
     
     var delta2 = new Date().getTime();
     var delta3 = delta2-delta;
-    setTimeout(initGame, Math.max(200-delta3,10));
+    console.log(delta3)
+    setTimeout(initGame, Math.max(150-delta3,10));
   }
   function checkwin(roomkey,id){
           var snake = rooms[roomkey].snakes[id];
+          if(snake){
           snake = snake.blocks;
           var snakeHead = snake[0];
           var dead = false;
@@ -147,7 +172,7 @@ function initGame(){
             }
             
           });
-          if(rooms[roomkey].snakes[id].score == 15 && !win){
+          if(rooms[roomkey].snakes[id].score == 10 && !win){
             io.to(roomkey).emit('win',rooms[roomkey].snakes[id]);
             gamesStarted = false;
             rooms[roomkey].win = true
@@ -185,6 +210,7 @@ function initGame(){
             io.to(roomkey).emit('death',id);
             rooms[roomkey].snakes.splice(id,1,'dead_snake');
           }
+          }
     
     
   }
@@ -200,7 +226,9 @@ function initGame(){
   }
   function movePlayers(roomkey,id){
           var snake = rooms[roomkey].snakes[id];
+          if(snake){
           var dir = snake.dir;
+
           var toPop = 0;
           if(snake.speed > 1){
             if(snake.blocks.length > 1){
@@ -294,11 +322,12 @@ function initGame(){
               
               break;
           }
+          }
   }
 
 function spawnBlock(room){
   if(rooms[room]){
-  if(odds(0.5)){
+  if(odds(0.75)){
     var side = Math.round(Math.random()*3);
     if(!rooms[room].blocks[0]){
       var blockX = Math.round((Math.random() * (23 - 1)) + 1);
@@ -365,27 +394,32 @@ function scale2board(number){
 function odds(odd){
   return (Math.random() < odd)
 }
-function sendBoard(roomkey,id){
+function sendBoard(roomkey){
     io.to(roomkey).emit('board',{
-      "snakes":rooms[roomkey].snakes,
-      "apple":rooms[roomkey].apple,
-      "walls":rooms[roomkey].blocks
+      "snakes":rooms[roomkey].snakes || [],
+      "apple":rooms[roomkey].apple || [],
+      "walls":rooms[roomkey].blocks || []
     });
     
 }
 function is_block_occupied(target,room){
   var foundblocks = rooms[room].blocks.find((elem)=>{
-    return ((target[0] == elem[0]) && (target[1] == elem[1]))
+    return (
+      (target[0] == elem[0] && target[1] == elem[1]) || 
+      (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1]) || (
+      [2,2][0] == target[0] && [2,2][1] == target[1])  || 
+      ([3,2][0] == target[0] && [3,2][1] == target[0]) || 
+      ([4,2][0] == target[0] && [4,2][1] == target[1]) || 
+      ([5,2][0] == target[0] && [5,2][1] == target[1]) || 
+      ([6,2][0] == target[0] && [6,2][1] == target[1]) || 
+      ([7,2][0] == target[0] && [7,2][1] == target[1]) || 
+      ([8,2][0] == target[0] && [8,2][1] == target[1]) || 
+      ([9,2][0] == target[0] && [9,2][1] == target[1]) || 
+      ([10,2][0] == target[0] && [10,2][1] == target[1])|| 
+      ([11,2][0] == target[0] && [11,2][1] == target[1])|| 
+      ([12,2][0] == target[0] && [12,2][1] == target[1])
+    )
   });
-  if(target[0] == rooms[room].apple[0] && target[1] == rooms[room].apple[1]){
-    return true;
-  }
-  if(target[0] == 2 && target[1] == 2){
-    return true;
-  }
-  if(target[0] == 3 && target[1] == 2){
-    return true;
-  }
   return (foundblocks) ? true : false;
 }
 function json2array(json){

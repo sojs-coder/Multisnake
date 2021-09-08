@@ -4,7 +4,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multisnake</title>
   <link href = "/home.css" rel = "stylesheet">
-  <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs, ">
+  <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
+  <link rel = "icon" href= "multisnake-favicon.png">
+  
   <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
 <script>
@@ -14,6 +16,7 @@
 
   gtag('config', 'G-DBKFRBYTHY');
 </script>
+<script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class = "dimmed"></div>
@@ -23,17 +26,23 @@
 </video>
 
   <div class = "row">
-    <div class = "column">
+    <div class = "column" style = "width: 50%; text-align: center;">
       <h1>Welcome to MultiSnake...</h1>
       <form action = "/play" method = "GET">
+      <div class = "group">
         <label for = "username">Your Username:</label>
-        <input type = "text" name = "username" placeholder = "Bob">
+        <input type = "text" name = "username" placeholder = "Bob"></div><br><div class = "group">
         <label for = "room">Room Code? Put it here</label>
-        <input type = "text" name = "room" placeholder = "public" value = "public">
+        <input type = "text" name = "room" placeholder = "public" value = "public"></div><br>
         <input type = "submit" value = "play">
       </form>
+      <h1>Join our community...</h1>
+      <div style = "font-size:50px">
+        <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
+        <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
+      </div>
     </div>
-    <div class = "column">
+    <div class = "column" >
       <h1>How to play</h1>
       <ul>
         <li>WASD or arrow keys to move</li>

@@ -1,6 +1,6 @@
 const queryString = window.location.search; 
   var searchObj = new URLSearchParams(queryString);
-  var username = searchObj.get('username') || "multisnake"
+  var username = searchObj.get('username') || getRandomName()
   var room = searchObj.get('room') || "public"
   window.room = room;
   window.direction = 2;
@@ -8,6 +8,9 @@ const queryString = window.location.search;
     "name":username,
     "room":room
   });
+  var oldsnakes = [];
+  var oldapple = "start";
+  var sessionapple = [10,10];
 function reverse(num){
   if(num+2 > 4){
     return num - 2 
@@ -15,7 +18,6 @@ function reverse(num){
     return num+2;
   }
 }
-
 function getRandomName(){
   var start = [
     'flying',
@@ -39,7 +41,8 @@ function getRandomName(){
     'Banana',
     'Duck'
   ];
-  //var end = 
+  var ending = start[Math.floor(Math.random()* start.length)] + end[Math.floor(Math.random()*end.length)] + Math.round(Math.random() * 100);
+  return ending;
 }
 window.lastTime = new Date().getTime()
 var by = 25;
@@ -70,7 +73,9 @@ window.alert = (html,cb)=>{
       td.innerHTML = "&nbsp;"
       td.style = "width: 20px; height: 10px;";
       if(j == 0 || j == 24 || i==0 || i == 24){
-        td.style.backgroundColor = "rgb(28, 49, 35)"
+        td.style.backgroundColor = "white"
+      }else{
+        td.classList.add('td');
       }
       tr.appendChild(td);
     }
@@ -98,10 +103,9 @@ socket.on('win',(snake)=>{
   }
 });
 socket.on('board',(data)=>{
-  clearBoard();
-
-
-
+  
+  
+  clearBoard(data.snakes,data.apple);
 
   var allSnakes = data.snakes;
   updateLeaders(allSnakes);
@@ -160,19 +164,29 @@ function updateLeaders(snakes){
     }
   })
 }
-function clearBoard(){
-  for(var i = 0; i < by; i++){
-    for(var j = 0; j < by; j++){
-      if(j == 0 || j == 24 || i==0 || i == 24){
-        getBlock(j,i).style.backgroundColor = "white"
-
-      }else{
-        getBlock(j,i).style.backgroundColor = "black";
-      }
-      getBlock(j,i).innerHTML = "&nbsp;"
+function clearBoard(snakes,apple){
+  if(oldapple !== "start"){
+    if(apple !== oldapple){
+      getBlock(oldapple[0],oldapple[1]).innerHTML = "&nbsp;";
+      oldapple = apple;
     }
-    document.getElementById('table').appendChild(tr)
+  }else{
+    oldapple = apple;
   }
+  if(oldsnakes !== "start"){
+    if(snakes !== oldsnakes){
+      oldsnakes.forEach((oldsnake)=>{
+        if(oldsnake !== "dead_snake"){
+          oldsnake.blocks.forEach((block)=>{
+            getBlock(block[0],block[1]).style.backgroundColor = "black";
+          });
+        }
+      });
+    }
+  }else{
+    oldapple = apple;
+  }
+  oldsnakes = snakes;
 }
 function propagateSnake(blocks,color){
   blocks.forEach((block,i)=>{
