@@ -104,7 +104,7 @@ socket.on('death',(id)=>{
     window.dead = true;
     var time = getFormatGameTime()
     alert(`<h1>You Died!</h1><p>Your final score was ${window.game.score}. Your time was ${time} seconds. Nice Job</p><h2>Share your score...</h2>
-    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
+    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev&item=24"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
       <div style = "font-size:50px">
         <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
         <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
@@ -115,7 +115,7 @@ socket.on('win',(snake)=>{
   if(snake.id == thisSnakeID){
     var time = getFormatGameTime()
     alert(`<h1>You Win!</h1><p>You won in  ${time} seconds. <b>Nice Job</b></p><h2>Share your win...</h2>
-    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
+    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev&item=24"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
       <div style = "font-size:50px">
         <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
         <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
@@ -123,7 +123,7 @@ socket.on('win',(snake)=>{
   }else{
     var time = getFormatGameTime()
     alert(`<h1>You Finished ${(parseInt(currplace)+1).toString()}</h1>The winner of this round was "${snake.username}"<p><p>Your final score was ${window.game.score}. Your time was ${time} seconds. Nice Job...</p><h2>Share your score...</h2>
-    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
+    <a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.sojs.dev&item=24"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h1>Remember to Join our community...</h1>
       <div style = "font-size:50px">
         <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
         <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>

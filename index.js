@@ -337,13 +337,17 @@ function initGame(){
 function spawnBlock(room){
   if(rooms[room]){
   if(odds(0.75)){
-    var side = Math.round(Math.random()*3);
     if(!rooms[room].blocks[0]){
       var blockX = Math.round((Math.random() * (23 - 1)) + 1);
       var blockY = Math.round((Math.random() * (23 - 1)) + 1);
-      rooms[room].blocks.push([blockX,blockY])
+      if(!is_block_occupied([blockx,blocky],room)){
+        rooms[room].blocks.push([blockX,blockY])
+      }else{
+        spawnBlock(room);
+      }
     }else{
-        var pickedblock = rooms[room].blocks[Math.floor(Math.random()*rooms[room].blocks.length)];
+      var side = Math.round(Math.random()*3);
+      var pickedblock = rooms[room].blocks[Math.floor(Math.random()*rooms[room].blocks.length)];
       var newblock = [];
       switch(side){
         case 0:
@@ -371,7 +375,7 @@ function spawnBlock(room){
           if(!is_block_occupied([newblock[0],newblock[1]],room)){
             rooms[room].blocks.push([newblock[0],newblock[1]]);
           }else{
-            spawnBlock()
+            spawnBlock(room);
           }
           break;
         case 3:
@@ -415,8 +419,11 @@ function is_block_occupied(target,room){
   var foundblocks = rooms[room].blocks.find((elem)=>{
     return (
       (target[0] == elem[0] && target[1] == elem[1]) || 
-      (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1]) || (
-      [2,2][0] == target[0] && [2,2][1] == target[1])  || 
+      (target[0] == rooms[room].apple[0] && target[1]==rooms[room].apple[1])
+     )
+  });
+  if((
+      ([2,2][0] == target[0] && [2,2][1] == target[1])  || 
       ([3,2][0] == target[0] && [3,2][1] == target[0]) || 
       ([4,2][0] == target[0] && [4,2][1] == target[1]) || 
       ([5,2][0] == target[0] && [5,2][1] == target[1]) || 
@@ -427,9 +434,12 @@ function is_block_occupied(target,room){
       ([10,2][0] == target[0] && [10,2][1] == target[1])|| 
       ([11,2][0] == target[0] && [11,2][1] == target[1])|| 
       ([12,2][0] == target[0] && [12,2][1] == target[1])
-    )
-  });
-  return (foundblocks) ? true : false;
+  )){
+    return true;
+  }else{
+    return (foundblocks) ? true : false;
+  }
+  
 }
 function json2array(json){
     var result = [];
