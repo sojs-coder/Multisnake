@@ -1,4 +1,5 @@
 window.addEventListener('load', ()=>{
+  
   var colors = ['red','purple','orange','green','yellow', 'blue','pink'];
   window.color = colors[Math.floor(Math.random() * colors.length)]
   const queryString = window.location.search; 

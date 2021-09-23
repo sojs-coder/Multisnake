@@ -147,6 +147,7 @@ function initGame(){
       }
       room.snakes.forEach((snake)=>{
         if(snake !== "dead_snake"){
+          rooms[room.key].lastvisited = new Date().getTime();
           movePlayers(room.key,snake.id);
           checkwin(room.key, snake.id);
           clearWinBoard(room.key, snake.id);
