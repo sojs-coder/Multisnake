@@ -1,17 +1,69 @@
-const queryString = window.location.search; 
+window.addEventListener('load', ()=>{
+  var colors = ['red','purple','orange','green','yellow', 'blue','pink'];
+  window.color = colors[Math.floor(Math.random() * colors.length)]
+  const queryString = window.location.search; 
   var searchObj = new URLSearchParams(queryString);
   var username = searchObj.get('username') || getRandomName()
   var room = searchObj.get('room') || "public"
+  var type = searchObj.get('type') || "normal"
   window.room = room;
   window.game = {}
   window.direction = 2;
   socket.emit('joining',{
     "name":username,
-    "room":room
+    "room":room,
+    "type":type
   });
   var oldsnakes = [];
   var oldapple = "start";
   var sessionapple = [10,10];
+    var messages = document.getElementById('chatbox');
+var form = document.getElementById('form');
+var input = document.getElementById('input');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (input.value) {
+    socket.emit('message', {
+      'room': window.room,
+      'msg':{
+        'content': input.value,
+        'sender': username,
+        'color': window.color
+      }
+    });
+    input.value = '';
+  }
+});
+
+
+window.chatFocused = false;
+document.addEventListener('keypress',(e)=>{
+  if(e.which == 13){
+    if(!window.chatFocused){
+      input.focus();
+      window.chatFocused = true;
+    }else{
+      input.blur();
+      window.chatFocused = false;
+    }
+  }
+});
+//     fog     ///
+function inFog(array, element){
+  var yes = false;
+  array.forEach(elem =>{
+    console.log(element[0], elem[0])
+    console.log((element[0] == elem[0] && element[1] == elem[1]))
+    if(element[0] == elem[0] && element[1] == elem[1]){
+      yes = true;
+    }
+  });
+  return yes;
+}
+window.fog = [];
+
+
 function reverse(num){
   if(num+2 > 4){
     return num - 2 
@@ -62,9 +114,9 @@ window.alert = (html,cb)=>{
   document.getElementById('alert-box').innerHTML+="<p>Click anywhere to continue</p>";
   document.getElementById('alert-box').onclick = (e)=>{
     document.getElementById('alert-box').style.display = "none";
-    if(cb!== location.reload){
+    if(cb !== location.reload){
 
-    cb()
+     cb()
     }else{
       location.reload()
     }
@@ -78,7 +130,6 @@ window.alert = (html,cb)=>{
       var td = document.createElement('td');
       td.id = j+'-'+i;
       td.innerHTML = "&nbsp;"
-      td.style = "width: 20px; height: 10px;";
       if(j == 0 || j == 24 || i==0 || i == 24){
         td.style.backgroundColor = "white"
       }else{
@@ -91,10 +142,25 @@ window.alert = (html,cb)=>{
 
 socket.on('joined',(id)=>{
   if(!joined && !thisSnakeID){
+    document.getElementById('loading').style.display = "none";
     thisSnakeID = id;
     startTimer();
     joined = true;
   }
+});
+socket.on('message', (msg)=>{
+  var item = document.createElement('div');
+  item.classList.add('msg');
+  var username = document.createElement('span');
+  username.appendChild(document.createTextNode(msg.sender+ ': '));;
+  username.style.color = msg.color;
+  username.classList.add('chat-username');
+  item.appendChild(username);
+  var message = document.createElement('span');
+  message.appendChild(document.createTextNode(msg.content));
+  item.appendChild(message);
+  messages.appendChild(item);
+  messages.scrollTo(0, messages.scrollHeight);
 });
 function getFormatGameTime(){
   return Math.round(endTimer()/1000);
@@ -135,22 +201,139 @@ socket.on('board',(data)=>{
   
   clearBoard(data.snakes,data.apple);
 
+  //      fog        //
+  if(data.type == "fog"){
+   if(window.fog.length < 250){
+    if(Math.random() < 0.9){
+      if(Math.random() < 0.8){
+          var pickedFog = window.fog[Math.floor(Math.random()*window.fog.length - 1)];
+          var side = Math.round(Math.random() * 3);
+          switch(side){
+            case 0:
+              var x = pickedFog[0] + 1;
+              var y = pickedFog[1];
+              x = Math.min(
+                    Math.max(
+                      x,
+                      1
+                    ),
+                    23
+                  )
+              y = Math.min(
+                    Math.max(
+                      y,
+                      1
+                    ),
+                    23
+                  )
+              var newBlock = [x,y];
+              window.fog.push(newBlock);
+              break;
+            case 1:
+              var x = pickedFog[0] - 1;
+              var y = pickedFog[1];
+              x = Math.min(
+                    Math.max(
+                      x,
+                      1
+                    ),
+                    23
+                  )
+              y = Math.min(
+                    Math.max(
+                      y,
+                      1
+                    ),
+                    23
+                  )
+              var newBlock = [x,y];
+              window.fog.push(newBlock);
+              break;
+            case 2:
+              var x = pickedFog[0];
+              var y = pickedFog[1] + 1;
+              x = Math.min(
+                    Math.max(
+                      x,
+                      1
+                    ),
+                    23
+                  )
+              y = Math.min(
+                    Math.max(
+                      y,
+                      1
+                    ),
+                    23
+                  )
+              var newBlock = [x,y];
+              window.fog.push(newBlock);
+              break;
+            case 3:
+              var x = pickedFog[0];
+              var y = pickedFog[1] - 1;
+              x = Math.min(
+                    Math.max(
+                      x,
+                      1
+                    ),
+                    23
+                  )
+              y = Math.min(
+                    Math.max(
+                      y,
+                      1
+                    ),
+                    23
+                  )
+              var newBlock = [x,y];
+              window.fog.push(newBlock);
+              break;
+          }
+      }else{
+        var x = Math.round(
+          Math.min(
+            Math.max(
+              Math.random()*25,
+              1
+            ),
+            23
+          )
+        )
+        var y = Math.round(
+          Math.min(
+            Math.max(
+              Math.random()*25,
+              1
+            ),
+            23
+          )
+        )
+        var newBlock = [x,y];
+        window.fog.push(newBlock);
+      }
+    }
+   }
+  }
+  window.fog.forEach((fog)=>{
+    getBlock(fog[0],fog[1]).style.backgroundColor = "#aaaaaa55";
+  });
+  // ----- end------ //
   var allSnakes = data.snakes;
   updateLeaders(allSnakes);
   getBlock(data.apple[0],data.apple[1]).innerHTML = "🍎";
   allSnakes.forEach((snake)=>{
     if(snake !== "dead_snake"){
       if(snake.id == thisSnakeID){
-        propagateSnake(snake.blocks,"darkgreen");
+        propagateSnake(snake.blocks,"darkgreen", true);
       }else{
-        propagateSnake(snake.blocks,"orange");
+        propagateSnake(snake.blocks,"orange",false);
       }
     }
   });
   data.walls.forEach((wall)=>{
     getBlock(wall[0],wall[1]).style.backgroundColor = "white";
   });
-  updateFPS();
 });
 function updateLeaders(snakes){
   snakes = snakes.map((snake)=>{
@@ -217,9 +400,13 @@ function clearBoard(snakes,apple){
   }
   oldsnakes = snakes;
 }
-function propagateSnake(blocks,color){
-  blocks.forEach((block,i)=>{
-    getBlock(block[0],block[1]).style.backgroundColor = color;
+function propagateSnake(blocks, color, ally){
+blocks.forEach((block,i)=>{
+    if(ally){
+      getBlock(block[0],block[1]).style.backgroundColor = color;
+    }else if(!ally && !inFog(window.fog,[block[0],block[1]])){
+      getBlock(block[0],block[1]).style.backgroundColor = color;
+    }
   })
 }
 function getBlock(x,y){
@@ -280,11 +467,4 @@ function changeDir(dir){
       "room":window.room
     });
 }
-
-function updateFPS(){
-  var currentTime = new Date().getTime();
-  var difference = currentTime - window.lastTime;
-  var perSeconds = 1000 / difference;
-  document.getElementById('fps').innerHTML = perSeconds.toFixed(1);
-  window.lastTime = new Date().getTime();
-}
+});

@@ -2,11 +2,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Multisnake</title>
+  <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
+  <title>MultiSnake - Multiplayer Snake!</title>
   <link href = "/home.css" rel = "stylesheet">
   <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
-  <link rel = "icon" href= "multisnake-favicon.png">
-  <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Play privately with your friends, or publicly. Join our discord, and compare times with other players. Try to beat them!"/>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "8kaopfbqyx");
+</script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
 <script>
@@ -16,48 +22,42 @@
 
   gtag('config', 'G-DBKFRBYTHY');
 </script>
-<script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class = "dimmed"></div>
-<video autoplay loop muted>
-  <source src="/multisnake.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-  <div class = "row">
-    <div class = "column" style = "width: 50%; text-align: center;">
-      <h1>Welcome to MultiSnake...</h1>
-      <form action = "/play" method = "GET">
-      <div class = "group">
-        <label for = "username">Your Username:</label>
-        <input type = "text" name = "username" placeholder = "Bob"></div><br><div class = "group">
-        <label for = "room">Room Code? Put it here</label>
-        <input type = "text" name = "room" placeholder = "public" value = "public"></div><br>
-        <input type = "submit" value = "play">
-      </form>
-      <h1>Join our community...</h1>
-      <div style = "font-size:50px">
-        <a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a>
-        <a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a>
+  <div id = "alert-box"></div>
+  <header><span class = "caret"><details>
+  <summary>Info</summary>
+  <div class = "content">
+    <p>&copy; SoJS 2021-<script>document.write(new Date().getFullYear())</script></p>
+    <hr>
+    <div class = "links">
+      <a href = "mailto:sojscoder@gmail.com">Contact</a> &bull; 
+      <a href = "https://discord.gg/Np7vBvEtp2">Discord</a> &bull; 
+      <a href = "https://replit.com/@sojs/">Replit</a> &bull; 
+      <a href = "https://github.com/sojs-coder/Multisnake">GitHub</a> &bull; 
+      <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> &bull; 
+    </div>
+    <hr>
+    <p>WASD or Arrow Keys to move. SPACE to boost. Dont run into walls or other snakes. Get to 10 to win.</p></div>
+</details></span></header>
+  <main>
+    <div class = "center">
+      <h1 class = "heading">MultiSnake</h1>
+      <div class = "form" action = "/play" id = "form">
+        <input type = "text" id = "username" name = "username" placeholder="Bob Joe" autofocus>
+        <button type = "button" id = "join">Join</button>
+        <div id = "room-box">
+          <input type = "text" id = "room" name = "room" placeholder="public">
+          <button id = "submit">Go!</button>
+        </div>
       </div>
     </div>
-    <div class = "column" >
-      <h1>How to play</h1>
-      <ul>
-        <li>WASD or arrow keys to move</li>
-        <li>Plays like standard Snake game</li>
-        <li>Multiplayer</li>
-        <li>Goal is to get to 50 points</li>
-        <li>Points are gained by eating apples</li>
-        <li>SPACE to use boost</li>
-        <li>Boost burns up apple</li>
-        <li>If a room doesnt exist yet it automatically creates itself</li>
-        <li>Share your room code with friends to create private games</li>
-      </ul>
-      <h3>Want another snake game with a twist?</h3>
-      <p>Try... <a href = "https://impossible-snake.sojs.dev/">THE IMPOSSIBLE SNAKE</a>
-    </div>
-  </div>
+  </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src = "/home.js"></script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-614bb1fe75e51347"></script>
+
 </body>
 </html>

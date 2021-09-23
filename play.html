@@ -3,12 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>MultiSnake</title>
+    <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
+    <meta http-equiv='content-language' content='en-un'>
+  <title>MultiSnake - Play Now!</title>
+  <link href = "/home.css" rel = "stylesheet">
+  <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
     <link href="style.css" rel="stylesheet" type="text/css" />
     <link rel = "icon" href= "multisnake-favicon.png">
     <script src="/socket.io/socket.io.js"></script>
-    <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Play privately with your friends, or publicly. Join our discord, and compare times with other players. Try to beat them!"/>
     <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
+        <script src="script.js"></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
@@ -19,23 +23,38 @@
 
   gtag('config', 'G-DBKFRBYTHY');
 </script>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "8kaopfbqyx");
+</script>
 <script>
   var socket = io();
 </script>
   </head>
   <body id = "body">
+    <img src = "loading.gif" id = "loading">
     <div id = "alert-box"></div>
     <div class = "row">
       <div class = "column leaders">
         <div class = "apples"><span id = "score"></span> 🍎</div>
         <h1>Leaderboard</h1>
-        <div id = "leaders"></div>
-        <h2>Stats:</h2>
-        
-        <div class = "FPS">FPS: <span id = "fps"></span></div>
+        <div id = "leaders"></div>  
+        <h2>Chat:</h2>
+        <p>To have a bit of fun, chat when you're dead to distract the people still alive.</p>
+        <div id = "chatbox">
+          
+          <form id = "form">
+            <input id = "input" placeholder="Enter to chat">
+          </form>
+        </div>
       </div>
     <table id = "table"></table>
     </div>
-    <script src="script.js"></script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-614bb1fe75e51347"></script>
+
   </body>
 </html>

@@ -15,7 +15,8 @@ var rooms = {
     "started":false,
     "points_to_next_obs": 5,
     "base_points_to_next_obs":5,
-    "lastvisited": new Date().getTime()
+    "lastvisited": new Date().getTime(),
+    "type":"normal"
   }
 }
 function getName(){
@@ -47,11 +48,15 @@ function getName(){
 initGame()
 io.on('connection', (socket) => {
   console.log('a user connected');
-
+  socket.on('message',(data)=>{
+    console.log(data)
+    io.to(data.room).emit('message', data.msg);
+  })
   socket.on('joining',(data)=>{
     
     var roomtojoin = (data) ? data.room || "public" : "public";
     var username = (data) ? data.name || getName() : getName();
+    var type = (data) ? data.type || "normal" : "normal";
     if(rooms[roomtojoin]){
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -74,7 +79,8 @@ io.on('connection', (socket) => {
         "started":false,
         "points_to_next_obs": 5,
         "base_points_to_next_obs":5,
-        "lastvisited": new Date().getTime()
+        "lastvisited": new Date().getTime(),
+        "type": type
       }
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -151,7 +157,6 @@ function initGame(){
     
     var delta2 = new Date().getTime();
     var delta3 = delta2-delta;
-    console.log(delta3)
     setTimeout(initGame, Math.max(100-delta3,10));
   }
   function checkwin(roomkey,id){
@@ -340,7 +345,7 @@ function spawnBlock(room){
     if(!rooms[room].blocks[0]){
       var blockX = Math.round((Math.random() * (23 - 1)) + 1);
       var blockY = Math.round((Math.random() * (23 - 1)) + 1);
-      if(!is_block_occupied([blockx,blocky],room)){
+      if(!is_block_occupied([blockX,blockY],room)){
         rooms[room].blocks.push([blockX,blockY])
       }else{
         spawnBlock(room);
@@ -411,7 +416,8 @@ function sendBoard(roomkey){
     io.to(roomkey).emit('board',{
       "snakes":rooms[roomkey].snakes || [],
       "apple":rooms[roomkey].apple || [],
-      "walls":rooms[roomkey].blocks || []
+      "walls":rooms[roomkey].blocks || [],
+      "type":rooms[roomkey].type || "normal"
     });
     
 }
