@@ -3,6 +3,13 @@
   --background: #000;
   --color: white;
 }
+.room{
+  color: grey;
+  font-weight: bold;
+  display: block;
+  letter-spacing: 2;
+  padding: 2px;
+}
 
 body{
   background-color: var(--background);

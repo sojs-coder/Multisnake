@@ -16,6 +16,7 @@ var rooms = {
     "points_to_next_obs": 5,
     "base_points_to_next_obs":5,
     "lastvisited": new Date().getTime(),
+    "by": 25,
     "type":"normal"
   }
 }
@@ -53,10 +54,11 @@ io.on('connection', (socket) => {
     io.to(data.room).emit('message', data.msg);
   })
   socket.on('joining',(data)=>{
-    
     var roomtojoin = (data) ? data.room || "public" : "public";
     var username = (data) ? data.name || getName() : getName();
     var type = (data) ? data.type || "normal" : "normal";
+    var by = (data) ? data.by || 25 : 25;
+    var towin = (data) ? data.towin || 15 : 15;
     if(rooms[roomtojoin]){
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -67,7 +69,9 @@ io.on('connection', (socket) => {
         "eating":false,
         "dir":2,
         "username": username,
-        "speed":1
+        "speed":1,
+        "by": by,
+        "towin": towin
       });
       rooms[roomtojoin].lastvisited = new Date().getTime();
       io.to(roomtojoin).emit('joined',id);
@@ -80,7 +84,9 @@ io.on('connection', (socket) => {
         "points_to_next_obs": 5,
         "base_points_to_next_obs":5,
         "lastvisited": new Date().getTime(),
-        "type": type
+        "type": type,
+        "by": by,
+        "towin": towin
       }
       socket.join(roomtojoin)
       var id = rooms[roomtojoin].snakes.length;
@@ -147,6 +153,7 @@ function initGame(){
       }
       room.snakes.forEach((snake)=>{
         if(snake !== "dead_snake"){
+          rooms[room.key].lastvisited = new Date().getTime();
           movePlayers(room.key,snake.id);
           checkwin(room.key, snake.id);
           clearWinBoard(room.key, snake.id);
@@ -167,8 +174,8 @@ function initGame(){
           var dead = false;
           var win = false;
           if(
-            snakeHead[0] > 23 || snakeHead[0] < 1 ||
-            snakeHead[1] > 23 || snakeHead[1] < 1 
+            snakeHead[0] > rooms[roomkey].by - 2 || snakeHead[0] < 1 ||
+            snakeHead[1] > rooms[roomkey].by - 2 || snakeHead[1] < 1 
             ){
             dead = true;
           }
@@ -186,7 +193,7 @@ function initGame(){
             }
             
           });
-          if(rooms[roomkey].snakes[id].score == 10 && !win){
+          if(rooms[roomkey].snakes[id].score == rooms[roomkey].towin && !win){
             io.to(roomkey).emit('win',rooms[roomkey].snakes[id]);
             gamesStarted = false;
             rooms[roomkey].win = true;
@@ -213,7 +220,9 @@ function initGame(){
             
             rooms[roomkey].apple = applepos;
             if(rooms[roomkey].points_to_next_obs == 0){
-              spawnBlock(roomkey);
+              if(rooms[roomkey].type == "normal"){
+                spawnBlock(roomkey);
+              }
               rooms[roomkey].points_to_next_obs = rooms[roomkey].base_points_to_next_obs
             }else{
               rooms[roomkey].points_to_next_obs -=1;
@@ -229,8 +238,8 @@ function initGame(){
     
   }
   function getNewApplePos(room){
-    var newAppleX = Math.round((Math.random() * (23 - 1)) + 1);
-    var newAppleY = Math.round((Math.random() * (23 - 1)) + 1);
+    var newAppleX = Math.round((Math.random() * (rooms[room].by - 2 - 1)) + 1);
+    var newAppleY = Math.round((Math.random() * (rooms[room].by - 2 - 1)) + 1);
     if(is_block_occupied([newAppleX,newAppleY],room)){
        return getNewApplePos(room)
     }else{
@@ -343,8 +352,8 @@ function spawnBlock(room){
   if(rooms[room]){
   if(odds(0.75)){
     if(!rooms[room].blocks[0]){
-      var blockX = Math.round((Math.random() * (23 - 1)) + 1);
-      var blockY = Math.round((Math.random() * (23 - 1)) + 1);
+      var blockX = Math.round((Math.random() * (rooms[room].by - 2 - 1)) + 1);
+      var blockY = Math.round((Math.random() * (rooms[room].by - 2 - 1)) + 1);
       if(!is_block_occupied([blockX,blockY],room)){
         rooms[room].blocks.push([blockX,blockY])
       }else{
@@ -357,7 +366,7 @@ function spawnBlock(room){
       switch(side){
         case 0:
           newblock[0] = pickedblock[0];
-          newblock[1] = scale2board(pickedblock[1]-1);
+          newblock[1] = scale2board(pickedblock[1]-1,room);
           if(!is_block_occupied([newblock[0],newblock[1]],room)){
             rooms[room].blocks.push([newblock[0],newblock[1]]);
           }else{
@@ -367,7 +376,7 @@ function spawnBlock(room){
         case 1:
 
           newblock[0] = pickedblock[0];
-          newblock[1] = scale2board(pickedblock[0]-1);
+          newblock[1] = scale2board(pickedblock[0]-1,room);
           if(!is_block_occupied([newblock[0],newblock[1]],room)){
             rooms[room].blocks.push([newblock[0],newblock[1]]);
           }else{
@@ -376,7 +385,7 @@ function spawnBlock(room){
           break;
         case 2:
           newblock[0] = pickedblock[0];
-          newblock[1] = scale2board(pickedblock[1]+1);
+          newblock[1] = scale2board(pickedblock[1]+1,room);
           if(!is_block_occupied([newblock[0],newblock[1]],room)){
             rooms[room].blocks.push([newblock[0],newblock[1]]);
           }else{
@@ -386,7 +395,7 @@ function spawnBlock(room){
         case 3:
 
           newblock[0] = pickedblock[0];
-          newblock[1] = scale2board(pickedblock[0]+1);
+          newblock[1] = scale2board(pickedblock[0]+1,room);
           if(!is_block_occupied([newblock[0],newblock[1]],room)){
             rooms[room].blocks.push([newblock[0],newblock[1]]);
           }else{
@@ -396,8 +405,8 @@ function spawnBlock(room){
       }
     }
   }else{
-    var blockX = Math.round((Math.random() * (23 - 1)) + 1);
-    var blockY = Math.round((Math.random() * (23 - 1)) + 1);
+    var blockX = Math.round((Math.random() * (rooms[room].by - 2 - 1)) + 1);
+    var blockY = Math.round((Math.random() * (rooms[room].by - 2 - 1)) + 1);
     if(!is_block_occupied[blockX,blockY],room){
       rooms[room].blocks.push([blockX,blockY])
     }else{
@@ -406,8 +415,8 @@ function spawnBlock(room){
   }
   }
 }
-function scale2board(number){
-  return Math.min(Math.max(1,number),23)
+function scale2board(number,room){
+  return Math.min(Math.max(1,number),rooms[room].by - 2)
 }
 function odds(odd){
   return (Math.random() < odd)
@@ -429,17 +438,17 @@ function is_block_occupied(target,room){
      )
   });
   if((
-      ([2,2][0] == target[0] && [2,2][1] == target[1])  || 
-      ([3,2][0] == target[0] && [3,2][1] == target[0]) || 
-      ([4,2][0] == target[0] && [4,2][1] == target[1]) || 
-      ([5,2][0] == target[0] && [5,2][1] == target[1]) || 
-      ([6,2][0] == target[0] && [6,2][1] == target[1]) || 
-      ([7,2][0] == target[0] && [7,2][1] == target[1]) || 
-      ([8,2][0] == target[0] && [8,2][1] == target[1]) || 
-      ([9,2][0] == target[0] && [9,2][1] == target[1]) || 
-      ([10,2][0] == target[0] && [10,2][1] == target[1])|| 
-      ([11,2][0] == target[0] && [11,2][1] == target[1])|| 
-      ([12,2][0] == target[0] && [12,2][1] == target[1])
+      ([2,2][0]  ==  target[0] && [2,2][1]  ==  target[1])   || 
+      ([3,2][0]  ==  target[0] && [3,2][1]  ==  target[0])   || 
+      ([4,2][0]  ==  target[0] && [4,2][1]  ==  target[1])   || 
+      ([5,2][0]  ==  target[0] && [5,2][1]  ==  target[1])   || 
+      ([6,2][0]  ==  target[0] && [6,2][1]  ==  target[1])   || 
+      ([7,2][0]  ==  target[0] && [7,2][1]  ==  target[1])   || 
+      ([8,2][0]  ==  target[0] && [8,2][1]  ==  target[1])   || 
+      ([9,2][0]  ==  target[0] && [9,2][1]  ==  target[1])   || 
+      ([10,2][0] == target[0]  && [10,2][1] ==  target[1])   || 
+      ([11,2][0] == target[0]  && [11,2][1] ==  target[1])   || 
+      ([12,2][0] == target[0]  && [12,2][1] ==  target[1])
   )){
     return true;
   }else{
@@ -472,6 +481,30 @@ app.get('/', (req, res) => {
 app.get('/play',(req,res)=>{
   res.sendFile(__dirname + '/play.html');
 });
+app.get('/api/v1/rooms',(req,res)=>{
+  var reems = json2array(rooms);
+  reems = reems.map((reem)=>{
+    var reemSnakes = reem.snakes.filter((snake)=>{
+      if(snake !== "dead_snake"){
+        return true;
+      }else{
+        return false;
+      }
+    });
+    return {
+      "room_key": reem.key,
+      "type":reem.type,
+      "lastvisited":reem.lastvisited,
+      "alive_snakes":reemSnakes,
+      "snake_quantity": reemSnakes.length,
+      "points_per_obstacle": reem.base_points_to_next_obs,
+      "apple_pos":reem.apple,
+      "current_obstacles":reem.obs,
+      "room_size":reem.by,
+    }
+  })
+  res.json(reems);
+})
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });

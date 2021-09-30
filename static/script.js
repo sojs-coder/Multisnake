@@ -5,14 +5,20 @@ window.addEventListener('load', ()=>{
   var searchObj = new URLSearchParams(queryString);
   var username = searchObj.get('username') || getRandomName()
   var room = searchObj.get('room') || "public"
-  var type = searchObj.get('type') || "normal"
+  var type = searchObj.get('type') || "normal";
+  var by = (type == "small") ? 15 : 25;
+  var towin = (type == "small") ? 5 : 10;
+
+  window.by = by;
   window.room = room;
   window.game = {}
   window.direction = 2;
   socket.emit('joining',{
     "name":username,
     "room":room,
-    "type":type
+    "type":type,
+    "by":by,
+    "towin":towin
   });
   var oldsnakes = [];
   var oldapple = "start";
@@ -53,8 +59,6 @@ document.addEventListener('keypress',(e)=>{
 function inFog(array, element){
   var yes = false;
   array.forEach(elem =>{
-    console.log(element[0], elem[0])
-    console.log((element[0] == elem[0] && element[1] == elem[1]))
     if(element[0] == elem[0] && element[1] == elem[1]){
       yes = true;
     }
@@ -62,7 +66,6 @@ function inFog(array, element){
   return yes;
 }
 window.fog = [];
-
 
 function reverse(num){
   if(num+2 > 4){
@@ -103,8 +106,7 @@ function getRandomName(){
   var ending = start[Math.floor(Math.random()* start.length)] + end[Math.floor(Math.random()*end.length)] + Math.round(Math.random() * 100);
   return ending;
 }
-window.lastTime = new Date().getTime()
-var by = 25;
+window.lastTime = new Date().getTime();
 var currplace = 0;
 var thisSnakeID = false,joined=false;
 window.dead = false;
@@ -130,7 +132,7 @@ window.alert = (html,cb)=>{
       var td = document.createElement('td');
       td.id = j+'-'+i;
       td.innerHTML = "&nbsp;"
-      if(j == 0 || j == 24 || i==0 || i == 24){
+      if(j == 0 || j == window.by - 1 || i==0 || i == window.by - 1){
         td.style.backgroundColor = "white"
       }else{
         td.classList.add('td');
@@ -165,6 +167,7 @@ socket.on('message', (msg)=>{
 function getFormatGameTime(){
   return Math.round(endTimer()/1000);
 }
+
 socket.on('death',(id)=>{
   if(id == thisSnakeID){
     window.dead = true;
@@ -203,110 +206,112 @@ socket.on('board',(data)=>{
 
   //      fog        //
   if(data.type == "fog"){
-   if(window.fog.length < 250){
+   if(window.fog.length < 400){
     if(Math.random() < 0.9){
       if(Math.random() < 0.8){
-          var pickedFog = window.fog[Math.floor(Math.random()*window.fog.length - 1)];
+          var pickedFog = window.fog[Math.floor(Math.random()*window.fog.length)];
+          if(pickedFog){
           var side = Math.round(Math.random() * 3);
-          switch(side){
-            case 0:
-              var x = pickedFog[0] + 1;
-              var y = pickedFog[1];
-              x = Math.min(
-                    Math.max(
-                      x,
-                      1
-                    ),
-                    23
-                  )
-              y = Math.min(
-                    Math.max(
-                      y,
-                      1
-                    ),
-                    23
-                  )
-              var newBlock = [x,y];
-              window.fog.push(newBlock);
-              break;
-            case 1:
-              var x = pickedFog[0] - 1;
-              var y = pickedFog[1];
-              x = Math.min(
-                    Math.max(
-                      x,
-                      1
-                    ),
-                    23
-                  )
-              y = Math.min(
-                    Math.max(
-                      y,
-                      1
-                    ),
-                    23
-                  )
-              var newBlock = [x,y];
-              window.fog.push(newBlock);
-              break;
-            case 2:
-              var x = pickedFog[0];
-              var y = pickedFog[1] + 1;
-              x = Math.min(
-                    Math.max(
-                      x,
-                      1
-                    ),
-                    23
-                  )
-              y = Math.min(
-                    Math.max(
-                      y,
-                      1
-                    ),
-                    23
-                  )
-              var newBlock = [x,y];
-              window.fog.push(newBlock);
-              break;
-            case 3:
-              var x = pickedFog[0];
-              var y = pickedFog[1] - 1;
-              x = Math.min(
-                    Math.max(
-                      x,
-                      1
-                    ),
-                    23
-                  )
-              y = Math.min(
-                    Math.max(
-                      y,
-                      1
-                    ),
-                    23
-                  )
-              var newBlock = [x,y];
-              window.fog.push(newBlock);
-              break;
+            switch(side){
+              case 0:
+                var x = pickedFog[0] + 1;
+                var y = pickedFog[1];
+                x = Math.min(
+                      Math.max(
+                        x,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                y = Math.min(
+                      Math.max(
+                        y,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                var newBlock = [x,y];
+                window.fog.push(newBlock);
+                break;
+              case 1:
+                var x = pickedFog[0] - 1;
+                var y = pickedFog[1];
+                x = Math.min(
+                      Math.max(
+                        x,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                y = Math.min(
+                      Math.max(
+                        y,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                var newBlock = [x,y];
+                window.fog.push(newBlock);
+                break;
+              case 2:
+                var x = pickedFog[0];
+                var y = pickedFog[1] + 1;
+                x = Math.min(
+                      Math.max(
+                        x,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                y = Math.min(
+                      Math.max(
+                        y,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                var newBlock = [x,y];
+                window.fog.push(newBlock);
+                break;
+              case 3:
+                var x = pickedFog[0];
+                var y = pickedFog[1] - 1;
+                x = Math.min(
+                      Math.max(
+                        x,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                y = Math.min(
+                      Math.max(
+                        y,
+                        1
+                      ),
+                      window.by - 2
+                    )
+                var newBlock = [x,y];
+                window.fog.push(newBlock);
+                break;
+            }
           }
       }else{
         var x = Math.round(
           Math.min(
             Math.max(
-              Math.random()*25,
+              Math.random()*window.by,
               1
             ),
-            23
+            window.by - 2
           )
         )
         var y = Math.round(
           Math.min(
             Math.max(
-              Math.random()*25,
+              Math.random()*window.by,
               1
             ),
-            23
+            window.by - 2
           )
         )
         var newBlock = [x,y];
@@ -325,7 +330,7 @@ socket.on('board',(data)=>{
   allSnakes.forEach((snake)=>{
     if(snake !== "dead_snake"){
       if(snake.id == thisSnakeID){
-        propagateSnake(snake.blocks,"darkgreen", true);
+        propagateSnake(snake.blocks,"green", true);
       }else{
         propagateSnake(snake.blocks,"orange",false);
       }

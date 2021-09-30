@@ -1,6 +1,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel = "canonical" href = "https://multisnake.xyz">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
   <title>MultiSnake - Multiplayer Snake!</title>
@@ -42,13 +43,17 @@
 </details></span></header>
   <main>
     <div class = "center">
-      <h1 class = "heading">MultiSnake</h1>
+      <h1 class = "heading" id = "big">MultiSnake</h1>
       <div class = "form" action = "/play" id = "form">
         <input type = "text" id = "username" name = "username" placeholder="Bob Joe" autofocus>
         <button type = "button" id = "join">Join</button>
         <div id = "room-box">
-          <input type = "text" id = "room" name = "room" placeholder="public">
-          <button id = "submit">Go!</button>
+          <h3>Rooms</h3>
+          <h4>Normal</h4>
+          <div id = "rooms-plain"></div>
+          <h4>Mods</h4>
+          <div id = "rooms-mods"></div>
+          
         </div>
       </div>
     </div>
