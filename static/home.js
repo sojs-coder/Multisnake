@@ -39,7 +39,7 @@ function openRoom(){
     for(var i = 0; i < 5; i++){
       var a = document.createElement('a');
       a.href = "/play?username="+username+"&room=public"+i;
-      var online = (roomsJSON["public"+i]) ? roomsJSON["public"+i].snake_quantity || 0 : 0;
+      var online = (roomsJSON["public"+i]) ? roomsJSON["public"+i].quantity || 0 : 0;
       linkText = document.createTextNode('Public-'+i+' | Online: '+ online);
       a.appendChild(linkText);
       a.classList.add('room');
@@ -50,7 +50,7 @@ function openRoom(){
 
           var a = document.createElement('a');
           a.href = "/play?username="+username+"&room="+d+i+"&type="+d;
-          var online = (roomsJSON["public"+i]) ? roomsJSON["public"+i].snake_quantity || 0 : 0;
+          var online = (roomsJSON["public"+i]) ? roomsJSON["public"+i].quantity || 0 : 0;
           linkText = document.createTextNode(d+'-'+i+' | Online: '+ online);
           a.appendChild(linkText);
           a.classList.add('room');
