@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    
     <link rel = "canonical" href = "https://multisnake.xyz/play">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -36,7 +37,27 @@
 </script>
   </head>
   <body id = "body">
-    <img src = "loading.gif" id = "loading">
+    <div id = "loading">
+      <img src = "loading.gif">
+      <div class = "tip" id = "tip">&nbsp;
+      </div>
+      <script>
+        getTip();
+        window.game.tipinterval = setInterval(getTip,3000);
+        function getTip(){
+          var tips = [
+              "Use the SPACE key to boost!",
+              "If you time your boosts at just the right moment, you can \"Phase\" through walls!",
+              "You can use both WASD or arrow keys!",
+              "To create your own bot, DM me (@sojs) on discord!",
+              "Walls spawn every 5 apples eaten in the public rooms, and never in the mods!",
+              "Get to 10 apples to win, or 5 in the small maps!","Bored? Invite your friends!",
+              "If you have a suggestion, go back to the home page click \"Info\" then \"Contact\"!"
+            ]
+            document.getElementById('tip').innerHTML = tips[Math.floor(Math.random() * tips.length)];
+        } 
+        </script>
+    </div>
     <div id = "alert-box"></div>
     <div class = "row">
       <div class = "column leaders">
@@ -45,12 +66,11 @@
         <div id = "leaders"></div>  
         <h2>Chat:</h2>
         <p>To have a bit of fun, chat when you're dead to distract the people still alive.</p>
-        <div id = "chatbox">
-          
-          <form id = "form">
-            <input id = "input" placeholder="Enter to chat">
-          </form>
+        <div id = "chatbox">  
         </div>
+        <form id = "form">
+            <input id = "input" class=  "chat-input" placeholder="Enter to chat">
+          </form>
       </div>
     <table id = "table"></table>
     </div>
@@ -59,3 +79,19 @@
 
   </body>
 </html>
+<!-- 
+
+                          _,..,,,_
+                     '``````^~"-,_`"-,_
+       .-~c~-.                    `~:. ^-.
+   `~~~-.c    ;                      `:.  `-,     _.-~~^^~:.
+         `.   ;      _,--~~~~-._       `:.   ~. .~          `.
+          .` ;'   .:`           `:       `:.   `    _.:-,.    `.
+        .' .:   :'    _.-~^~-.    `.       `..'   .:      `.    '
+       :  .' _:'   .-'        `.    :.     .:   .'`.        :    ;
+  jgs  :  `-'   .:'             `.    `^~~^`   .:.  `.      ;    ;
+        `-.__,-~                  ~-.        ,' ':    '.__.`    :'
+                                     ~--..--'     ':.         .:'
+                                                     ':..___.:'
+
+ -->
