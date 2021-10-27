@@ -1,7 +1,18 @@
+
 :root{
   --main-green: green;
   --background: #000;
   --color: white;
+}
+.room{
+  color: grey;
+  font-weight: bold;
+  display: block;
+  letter-spacing: 2;
+  padding: 2px;
+}
+#room-box{
+  display: none;
 }
 
 body{
@@ -41,24 +52,39 @@ header{
 }
 
 /* MAIN */
-main{
+main.top{
   width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 30%;
-  display: flex;
-  flex-direction: column;
+  height: 100vh;
+  display: block;
+  margin: none;
+  padding: none;
+}
+main.below{
+  width: 100%;
+  padding-top: 5vh;
+  height: 100vh;
+  display: block;
+  margin: none;
+  padding: none;
+}
+main.below p, main.below ul li{
+  font-size: 20px;
+}
+main.below h3{
+  font-size: 30px;
+}
+main.below h4{
+  font-size: 25px;
 }
 .center{
-  vertical-align: center;
-  text-align: center;
+  margin-top: 30vh;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+  justify-content: center;
+  text-align: center;
+}
+.center h1, .center div{
+  float: center;
 }
 .heading{
   font-size: 400%;
@@ -107,10 +133,10 @@ a{
   font-weight: bold;
 }
 a:hover{
-  text-decoration: underline;
+  text-decoration: none !important;
 }
 .caret details{
-    z-index: 999999999;
+    z-index: 999;
 }
 .caret details .content{
   border: 1px solid #333;
@@ -120,6 +146,7 @@ a:hover{
   max-width: 20%;
   text-align: left;
   background-color: #333;
+  z-index: inherit;
 }
 .links{
   text-align: center;
@@ -127,3 +154,77 @@ a:hover{
 .caret details hr{
   color: #555555;
 }
+
+.bottom{
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+}
+.arrow{
+  text-align: center;
+  margin: 8% 0;
+}
+.arrow .arrow-{
+  color: white !important;
+}
+.arrow .arrow-:hover{
+  text-decoration: none !important;
+  color: white !important;
+}
+.bounce {
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
+}
+#rooms-plain{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+fieldset{
+  border: 1px solid white;
+  border-radius: 6px;
+}
+fieldstet a{
+  margin: auto;
+  vertical-align: center;
+}
+fieldset legend{
+  padding: 5px;
+  margin: auto;
+  background-color: white;
+  color: #000;
+  border: 1px solid white;
+  border-radius: 6px;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+/* 
+           /^\/^\
+         _|__|  O|
+\/     /~     \_/ \
+ \____|__________/  \
+        \_______      \
+                `\     \                 \
+                  |     |                  \
+                 /      /                    \
+                /     /                       \\
+              /      /                         \ \
+             /     /                            \  \
+           /     /             _----_            \   \
+          /     /           _-~      ~-_         |   |
+         (      (        _-~    _--_    ~-_     _/   |
+          \      ~-____-~    _-~    ~-_    ~-_-~    /
+            ~-_           _-~          ~-_       _-~
+               ~--______-~                ~-___-~
+ */

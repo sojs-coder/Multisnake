@@ -1,14 +1,11 @@
-.row{
-  display: flex;
-  flex-direction: row;
-  color:white; 
-  z-index: 9999999;
-}
-.msg{
-  padding: 3px;
-}
+
+/* Alert box and loading */
 #alert-box h1 {
-    font-size: 50px;
+    font-size: 40px;
+}
+#leaders{
+  max-height: 15vh;
+  overflow: scroll;
 }
 #alert-box .fab {
     color: lightblue;
@@ -22,26 +19,28 @@
   height: 100%;
   object-fit: cover;
   position: absolute;
+  vertical-align: center;
+  text-align: center;
   top: 0;
+  color: #fff;
   left: 0;
-  opacity: 0.6;
+  z-index: 999999;
+  background-color: #000;
 }
-#player{
-  color: blue;
+#loading img{
+  width: 40%;
 }
-.leaders{
+.tip{
+  color: rgb(117, 117, 117);
   z-index: inherit;
-  border: 2px solid white;
-  border-radius: 10px 2px 10px 2px;
   padding: 10px;
-  overflow-y: scroll;
-  overflow-x: hidden;
 
+  
 }
 #alert-box{
   cursor: pointer;
   position: fixed;
-  padding-left: 21vh;
+  padding-left: 25vh;
   background-color: #000000;
   color: #fff;
   text-align: center;
@@ -51,61 +50,91 @@
   height:100%;
   display: none;
 }
-.column{
-  display: flex;
-  flex-direction: column;
-  width: 25%;
-}
-td,tr{
-  background-color: black;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-}
-body{
-  background-color: black;
-}
+
+/* table */
 table{
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 10px;
-  padding: 10px;
   border-collapse: collapse;
 }
-.apples{
-  border: 1px solid gold;
-  border-radius: 4px;
-  font-size: 24px;
-  display: inline-block;
-  padding: 3px;
-}
-img[src="/social_rumbles_promo.png"]{
-  border-radius: 100px;
+td{
+  background-color: black;
+    width: 20px;
+    height: 20px;
+    text-align: center;
 }
 
-#input { 
-  border: none;
-  outline: none;
-  background-color: transparent;
-  border-bottom: 3px solid #fff;
-  margin: 0.25rem; 
-  width: 90%;
-  position: fixed;
-  bottom: 0;
-  color: #fff;
-  z-index: inherit;
+/* row */
+.row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 }
-#input:focus{
-  outline:none;
-  z-index: inherit;
+/* Left bar */
+.column{
+  width: 40%;
+  height: 80vh;
+  display: flex;
+  padding: 1vh;
+  flex-direction: column;
+  float: left;
+}
+.column{
+  z-index: 8888;
 }
 
+/* right bar */
+
+table{
+  margin: 1%;
+  float: right;
+}
+
+/* apples */
+	
+.apples {
+    font-size: 24px;
+    display: inline-block;
+    padding: 3px;
+}
+
+/* chat */
 #chatbox{
-  border: 1px solid #fff;
+  display: flex;
+  flex-direction: column;
   z-index: inherit;
-  border-radius: 10px 0px 10px 0px;
-  margin: 5px;
-  height: 90%;
-  max-height: 40vh;
   overflow: scroll;
+  height: 30vh;
+  margin-bottom: 1vh;
 }
+.chat-input{
+  border: none;
+  color: #fff;
+  border-bottom: 1px solid white;
+  background-color: transparent;
+  width: 100%;
+}
+.chat-input:focus{
+  outline: none;
+}
+
+/* player */
+#player{
+  color: blue;
+}
+/* spawn */
+
+.spawn{
+  background: #000000;
+background: -webkit-linear-gradient(right, #000000, #0C5C01);
+background: -moz-linear-gradient(right, #000000, #0C5C01);
+background: linear-gradient(to left, #000000, #0C5C01);
+}
+
+/*
+             ____
+            / . .\
+            \  ---<
+             \  /
+   __________/ /
+-=:___________/
+*/

@@ -1,6 +1,11 @@
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8">
+  <link rel = "canonical" href = "https://multisnake.xyz">
+   <link rel = "icon" href= "multisnake-favicon.png">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
   <title>MultiSnake - Multiplayer Snake!</title>
@@ -25,35 +30,54 @@
 </head>
 <body>
   <div id = "alert-box"></div>
-  <header><span class = "caret"><details>
-  <summary>Info</summary>
-  <div class = "content">
-    <p>&copy; SoJS 2021-<script>document.write(new Date().getFullYear())</script></p>
-    <hr>
-    <div class = "links">
-      <a href = "mailto:sojscoder@gmail.com">Contact</a> &bull; 
-      <a href = "https://discord.gg/Np7vBvEtp2">Discord</a> &bull; 
-      <a href = "https://replit.com/@sojs/">Replit</a> &bull; 
-      <a href = "https://github.com/sojs-coder/Multisnake">GitHub</a> &bull; 
-      <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> &bull; 
-    </div>
-    <hr>
-    <p>WASD or Arrow Keys to move. SPACE to boost. Dont run into walls or other snakes. Get to 10 to win.</p></div>
-</details></span></header>
-  <main>
+  <main class = "top">
     <div class = "center">
-      <h1 class = "heading">MultiSnake</h1>
+      <h1 class = "heading" id = "big">MultiSnake</h1>
       <div class = "form" action = "/play" id = "form">
         <input type = "text" id = "username" name = "username" placeholder="Bob Joe" autofocus>
         <button type = "button" id = "join">Join</button>
         <div id = "room-box">
-          <input type = "text" id = "room" name = "room" placeholder="public">
-          <button id = "submit">Go!</button>
+          <div id = "rooms-plain"></div>
+          <div id = "rooms-mods"></div>
+          
         </div>
       </div>
+      <div class = "bottom"><div class="arrow bounce">
+  <a class="fa fa-arrow-down fa-2x arrow-" href="#welcome_to_multisnake"></a>
+</div></div>
     </div>
+    
   </main>
-
+  <main class="below">
+  <div class = "content">
+    <h3 id = "welcome_to_multisnake">Welcome to MultiSnake</h3>
+    <h4>What is MultiSnake?</h4>
+    <p>MultiSnake is an incredibly easy to play multiplayer snake game. Proggrammed in node.js, HTML, CSS, and Javascript with Replit, you can join different rooms and play different mods. Use WASD or the arrow keys to move around the map, and the space bar to use your boost</p>
+    <p><strong>MultiSnake is the worlds first multiplayer snake</strong>. MultiSnake is not a knock-off like slither.io, or powerline.io, but it is <strong>truly, at its core, a snake game.</strong> There is only ever one apple on the map, and player have to race to get to it. Of course, classic snake is not enough, so we added a couple twists:
+    </p>
+      <p><ul>
+        <li>Different Game Mods including a small and fog versions.</li>
+        <li>Blocks that spawn to block you</li>
+        <li>Fun automatically generated usenames like "PinkDuck45" (but dont worry, you can still choose custom ones)</li>
+      </ul></p>
+      <p>Becuase MultiSnake is a multiplayer game, there are a lot of strategies that one can use. Here are a couple good ones that will never fail you, and a couple advanced ones for the serious gamer. Here are some good general guidlines:
+        <ul>
+          <li><p><b>Twisting:</b> we all know that sometimes it is impossible to get the apple. There will be times where 3 snakes will all run at it and they will all die. To take advantage of that, navigate to a clear spot on the map and coil you body around and around until their is an opening for you to jump in an take the apple. Then go back to twisting and wait some more.</p></li>
+          <li><p><b>Kamikaze:</b> sometimes its just so hopeless. You keep dying over and over. A snake is at 8 apples and about to win. Here is what you do. It is all about timing. Get one apple to boost with and get right in front of the other snakes path. Dont mind your own life. Your only goal here is to beat the other snake. Boost at just the right moment and he'll never know what hit him</p></li>
+          <li><p><b>Phasing:</b> this technique needs a lot of practice to master. Spawn some apples by eating 5 or so apples. This trick is also about timing, and is mostly instinctive. Get to the a square right next to a block and smash the boost button (space bar). If you timed it right, you'll "phase" through the block. In a real game, you can use this to escape other snakes trying to kill you, and blocks will no longer be a problem.</p></li>
+        </ul>
+      </p>
+      <h4>How to play different game modes</h4>
+      <p><ul><li>
+        <b>Public-</b> All the public rooms have the same rules as normal snake. You can not go backwards onto yourself. Blocks will spawn every 5 apples eaten, and you can not run into them, other snakes, the walls, or yourself
+        </li>
+        <li><b>Small-</b> the same rules as the public rooms, but you no blocks spawn and the map is a lot smaller</li>
+        <li><b>Fog- </b> same rules as public, but blocks do not spawn, and fog does. You can not see other players in the fog.</li>
+        <li><b>Tag-</b> Eat an apple to become "it" and turn yellow! Tag other people to kill them! Walls will not spawn. Get to ten apples to win!</li></ul></p>
+      <h4>Game Credits</h4>
+      <p>Thanks to <a href = "https://replit.com/@Coder100">@Coder100</a> for helping with bugs back in beta. Thank you to <a href = "https://replit.com/@PYer">@PYer</a> for coming up with ideas for mods. Thank you to <a href = "https://replit.com/@ch1ck3n">@ch1ck3n</a> for helping with speed of the game. Thank you to <a href = "https://replit.com/@rickysong">@rickysong</a> and <a href = "https://socialrumbles.com/@Dheirya_Tyagi_CEO">@Redman</a> for helping with testing. Lastly, thank you to the entire discord community for the support and helping to find bugs!</p>
+    <footer>&copy 2021-<script>document.write(new Date().getFullYear())</script> <a href= "https://sojs.dev">SoJS</a> | <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> | <a href= "https://replit.com/@sojs">Repl.it</a> | <a href = "https://discord.gg/Np7vBvEtp2">Discord</a> | <a href = "https://github.com/sojs-coder/Multisnake">Github</a></footer>
+  </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src = "/home.js"></script>
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
@@ -61,3 +85,22 @@
 
 </body>
 </html>
+<!-- 
+         ---_ ......._-_--.
+      (|\ /      / /| \  \
+      /  /     .'  -=-'   `.
+     /  /    .'             )
+   _/  /   .'        _.)   /
+  / o   o        _.-' /  .'
+  \          _.-'    / .'*|
+   \______.-'//    .'.' \*|
+    \|  \ | //   .'.' _ |*|
+     `   \|//  .'.'_ _ _|*|
+      .  .// .'.' | _ _ \*|
+      \`-|\_/ /    \ _ _ \*\
+       `/'\__/      \ _ _ \*\
+      /^|            \ _ _ \*
+     '  `             \ _ _ \      ASH (+VK)
+                       \_
+
+ -->
