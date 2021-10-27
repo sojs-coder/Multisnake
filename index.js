@@ -301,6 +301,7 @@ function initGame(){
             rooms[room.key].lastvisited = new Date().getTime();
           }
           // move the player. pass the room and the snakes id.
+          rooms[room.key].lastvisited = new Date().getTime();
           movePlayers(room.key,snake.id);
           // hand deaths and winds
           checkwin(room.key, snake.id);
