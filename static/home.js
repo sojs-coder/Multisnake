@@ -49,7 +49,7 @@ function openRoom(){
       var a = document.createElement('a');
       a.href = "/play?username="+username+"&room=classic"+i;
       var online = (roomsJSON["classic"+i]) ? roomsJSON["classic"+i].snake_quantity || 0 : 0;
-      linkText = document.createTextNode('classic-'+i+' | Online: '+ online);
+      linkText = document.createTextNode('Classic-'+i+' | Online: '+ online);
       a.appendChild(linkText);
       a.classList.add('room');
       classicContainer.appendChild(a);
@@ -59,21 +59,38 @@ function openRoom(){
     document.getElementById('rooms-plain').appendChild(classicContainer);
 
     // Loop through mods
-    ['small','fog','tag'].forEach((d)=>{
+    [
+      {
+        'name':'Small',
+        'type':'small'
+      },
+      {
+        'name':'Fog',
+        'type':'fog'
+      },
+      {
+        'name':'Tag',
+        'type':'tag'
+      },
+      {
+        'name':'Redlight',
+        'type':'redgreen'
+      }
+    ].forEach((d)=>{
       // create UI container for mod
       var modContainer = document.createElement('fieldset');
       modContainer.classList.add('mod-container');
       var legend = document.createElement('legend');
-      legend.appendChild(document.createTextNode(d));
-      modContainer.id = "mod-container-"+d
+      legend.appendChild(document.createTextNode(d.name));
+      modContainer.id = "mod-container-"+d.type;
       modContainer.appendChild(legend);
       // create 2 rooms per mod
         for(var i = 0; i < 2; i++){
           // create link to room and append to container
           var a = document.createElement('a');
-          a.href = "/play?username="+username+"&room="+d+i+"&type="+d;
+          a.href = "/play?username="+username+"&room="+d.type+i+"&type="+d.type;
           var online = (roomsJSON[d+i]) ? roomsJSON[d+i].snake_quantity || 0 : 0;
-          linkText = document.createTextNode(d+'-'+i+' | Online: '+ online);
+          linkText = document.createTextNode(d.name+'-'+i+' | Online: '+ online);
           a.appendChild(linkText);
           a.classList.add('room');
           modContainer.appendChild(a);

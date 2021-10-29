@@ -1,38 +1,59 @@
 // give loading screen time to display
 window.addEventListener('load', () => {
-	setTimeout(initGame, 1000);
+	initGame()
 });
 // initGame
 function initGame() {
 	// choose color for chat
-	window.addEventListener('load', () => {
 		var colors = ['red', 'purple', 'orange', 'green', 'yellow', 'blue', 'pink'];
 		window.color = colors[Math.floor(Math.random() * colors.length)];
 		// find out mod and username
 		const queryString = window.location.search;
 		var searchObj = new URLSearchParams(queryString);
 		var username = searchObj.get('username') || getRandomName();
-		var room = searchObj.get('room') || "public0";
-		var type = searchObj.get('type') || "normal";
-		// how wide is our map?
+		var room = searchObj.get('room') || "classic0";
+		var type = searchObj.get('type') || "classic";
+    var how_to_play = {
+      'classic':'Classic mode plays much like classic snake, but with the addition of walls and boosts. Move around using WASD or arrow keys. Use SPACE to boost, and get to 10 apples to win.',
+      'small':'Small map plays just like normal snake, but it is in a very small map. There are no walls. Use WASD or the arrow keys to move around, and SPACE to boost. Get to 5 apples to win.',
+      'fog':'Fog mod is the same as classic mode, but fog is spawned all over the map in patches. You can not see other players in the fog. Use WASD or the arrow keys to move around, and SPACE to boost. Get to 10 apples to win.',
+      'tag':'The tag mod is one of the most intense mods out there. Use the arrow keys or WASD to move around the map, and SPACE to boost. No walls will spawn. Eat the apple and become "it". Run into other snakes to kill them. Get to ten apples to win. A lot harder than it looks.',
+      'redgreen':'Another one of the more intense mods, suggested by <a href = "https://replit.com/@rickysong">@rickysong</a>, you run around and eat the apples like normal snake, but when ever the light turns yellow, slam on the space bar to freeze your snake. The light will turn red half a second after the yellow, and if your snake is moving when the light is red, you die. WASD or arrow keys to move. SPACE to freeze your snake. Get to 10 apples to win.'
+    }
+    	// how wide is our map?
 		var by = (type == "small") ? 15 : 25;
 		// how many apples to win?
 		var towin = (type == "small") ? 5 : 10;
+    
+	
 		// this is all handled server-side... hack proof.
-		// dont ask me why hack is that color.
 		// append to window object so they are accessible throughout the code and files.
 		window.by = by;
 		window.room = room;
 		window.game = {};
 		window.direction = 2;
 		// tell the server to append us to the queue of people waiting to join room
-		socket.emit('joining', {
-			"name": username,
-			"room": room,
-			"type": type,
-			"by": by,
-			"towin": towin
-		});
+    if(!cookie2json(document.cookie)[type]){
+      document.getElementById('loading').style.display = "none";
+      showHowToPlay(how_to_play[type],()=>{
+        socket.emit('joining', {
+          "name": username,
+          "room": room,
+          "type": type,
+          "by": by,
+          "towin": towin
+        });
+      });
+      document.cookie = (type + "=true");
+    }else{
+      socket.emit('joining', {
+        "name": username,
+        "room": room,
+        "type": type,
+        "by": by,
+        "towin": towin
+      });
+    }
 		// set up defualt values.
 		var oldsnakes = [];
 		var oldapple = "start";
@@ -174,6 +195,7 @@ function initGame() {
 				if (j == 0 || j == window.by - 1 || i == 0 || i == window.by - 1) {
 					// this is a border block
 					td.style.backgroundColor = "white";
+          td.classList.add('border-block')
 				} else {
 					td.classList.add('td');
 				}
@@ -184,6 +206,13 @@ function initGame() {
 			}
 			document.getElementById('table').appendChild(tr);
 		}
+    // if the type is redlight greenlight, turn the color to green.
+    if(type == "redgreen"){
+      var borderBlocks = document.querySelectorAll('.border-block');
+      borderBlocks.forEach((block)=>{
+      block.style.backgroundColor = "green";
+    })
+    }
 		// the server has let a snake join
 		socket.on('joined', (id) => {
 			// if the snake is already in the game, and has an ID, do nothing. Else, clear the loading screen, and change all values to positive
@@ -236,6 +265,12 @@ function initGame() {
 			alert(`<h1>You Finished ${(parseInt(currplace)+1).toString()}</h1>The winner of this round was "${snake.username}"<p><p>Your final score was ${window.game.score}. Your time was ${time} seconds. Nice Job...</p><h3>Share your score...</h3><a href = "https://socialrumbles.com/post/s/new/?text=In%20MultiSnake%20,%20I%20got%20a%20score%20of%20${window.game.score}%20in%20${time}%20seconds%2C%20beat%20me!&url=https://multisnake.xyz&item=24"><img src = '/social_rumbles_promo.png' alt = "social  rumbles"></a> <h3>Remember to Join our community...</h3><div style = "font-size:50px"><a style = "padding: 25px" href = "https://discord.gg/Np7vBvEtp2"><i class="fab fa-discord"></i></a><a style = "padding: 25px" href = "https://github.com/sojs-coder/Multisnake"><i class="fab fa-github"></i></a></div>`, location.reload);
 		}
 	});
+  if(type == 'redgreen'){
+    socket.on('color',(d)=>{
+      displayColor(d);
+    });
+  }
+
 	// the board has been updated. what to do
 	socket.on('board', (data) => {
 		// call clear board (updated board)
@@ -550,13 +585,37 @@ function initGame() {
 	});
 	// tell the server to change snake direction.
 	function changeDir(dir) {
-		console.log('ID: ' + window.thisSnakeID);
 		socket.emit('direction', {
 			"id": window.thisSnakeID.toString(),
 			"dir": dir,
 			"room": window.room
 		});
 	}
+  function displayColor(color){
+    var borderBlocks = document.querySelectorAll('.border-block');
+    borderBlocks.forEach((block)=>{
+      block.style.backgroundColor = color;
+    })
+  }
+  function showHowToPlay(playtext,cb){
+    $('.popup').show();
+    document.getElementById('play_text').innerHTML = playtext;
+    $('.close').click(function(){
+      cb();
+      $('.popup').hide();
+      return false;
+    });
+  }
+  // convert cookies to json readable format
+  function cookie2json(str){
+    str = str.split('; ');
+    const result = {};
+    for (let i in str) {
+        const cur = str[i].split('=');
+        result[cur[0]] = cur[1];
+    }
+    return result;
+  }
 	// convert json object to array.
 	function json2array(json) {
 		var result = [];
@@ -568,7 +627,6 @@ function initGame() {
 		});
 		return result;
 	}
-});
 }
 
 /*
