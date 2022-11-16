@@ -1,8 +1,7 @@
 window.largeAlert = (html)=>{
   document.getElementById('alert-box').innerHTML = html;
-  document.getElementById('alert-box').style.display = "block";
+  document.getElementById('alert-box').style.display = "inline";
 }
-
 if(window.self !== window.top){
   largeAlert('<h1>This site will preform a lot better <a href = "https://multisnake.sojs.dev/" target = "_blank">when opened in a new window</a>.</h1>')
 }
@@ -32,7 +31,7 @@ function openRoom(){
     // use api to see who is online and in what rooms
     var roomsJSON = {};
 
-    // convert to array
+    // convert to json
     json.forEach(item => roomsJSON[item.room_key] = item); 
 
     // create UI container
@@ -89,7 +88,7 @@ function openRoom(){
           // create link to room and append to container
           var a = document.createElement('a');
           a.href = "/play?username="+username+"&room="+d.type+i+"&type="+d.type;
-          var online = (roomsJSON[d+i]) ? roomsJSON[d+i].snake_quantity || 0 : 0;
+          var online = (roomsJSON[d.type+i]) ? roomsJSON[d.type+i].snake_quantity || 0 : 0;
           linkText = document.createTextNode(d.name+'-'+i+' | Online: '+ online);
           a.appendChild(linkText);
           a.classList.add('room');

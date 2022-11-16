@@ -1,4 +1,20 @@
-
+.__spectate{
+  background-color: lightblue;
+  padding: 10px;
+  color: black;
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 20px;
+  transition: 500ms;
+  cursor: pointer;
+  margin: 6px;
+}
+.__spectate:hover{
+  background-color: black;
+  border: 1px solid white;
+  color: white;
+  transition: 500ms;
+}
 /* Alert box and loading */
 #alert-box h1 {
     font-size: 40px;
@@ -38,7 +54,6 @@
   
 }
 #alert-box{
-  cursor: pointer;
   position: fixed;
   padding-left: 25vh;
   background-color: #000000;

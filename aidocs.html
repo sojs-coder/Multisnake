@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Multisnake- AI creation documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+     <link href = "/home.css" rel = "stylesheet">
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/languages/js.min.js"></script>
+    <style>pre{display: inline-block; width: 75%}</style>
+    
+    
+  </head>
+  <body>
+    <h1>Welcome to the AI documentation</h1>
+    <p>If your not sure how you got here, <a href = '/'>go back to playing</a></p>
+    <p>To submit an AI, DM me (sojs) a link to your project <a href="https://discord.com/invite/Np7vBvEtp2">through the discord</a></p>
+    <p>Im sorry if its hard to understand. I dislike writing documentation.</p>
+    <h2>Parent Function</h2>
+    <pre><code>
+      var your_ai = (snake, roomkey){
+        //the AI is untestable untill in production
+        var snakehead = snake[0];
+        //AI code. Edit snake direction with
+        rooms[roomkey].snakes[snake.id].dir = 1;
+        // 1 is up (lowers snake Y pos - snakehead[1])
+        // 2 is right (increase snake X pos - snakeHead[0])
+        // 3 is down (increases snake Y)
+        // 4 is left (lowers snake X)
+        //changing snake speed
+        rooms[roomley].snakes[snake.id].speed = 1 || 2;
+        //1 is normal speed. 2 is double as fast (skips every other block)
+      }
+    </code>
+    </pre>
+    <h2>Analyzing block position</h2>
+    <pre><code>
+      rooms[roomkey].blocks.forEach((block)=>{
+        var blockX = block[0];
+        var blockY = block[1];
+        //checking against snakeHead
+        var snakeHead = snake[0];
+        if(blockX == snakeHead[0]){
+          //same X
+        }
+        if(blockY == snakeHead[1]){
+          //same Y
+        }
+        // etc., etc. Change direction based off of whether the snake will run into a block or not.
+      })
+    </code>
+    </pre>
+    <h2>Finding other snakes</h2>
+    <pre><code>
+      var snakesArray = json2array(rooms[roomkey].snakes);
+      snakesArray.forEach((snakeBlock)=>{
+        var blockX = snakeBlock[0];
+        var blockY = snakeBlock[1];
+        //checking against snakeHead
+        var snakeHead = snake[0];
+        if(blockX == snakeHead[0]){
+          //same X
+        }
+        if(blockY == snakeHead[1]){
+          //same Y
+        }
+      })
+    </code>
+    </pre>
+    <h3>Apple position</h3>
+    <pre><code>
+      var applePos = rooms[roomkey].apple;
+      var appleX = applePos[0];
+      var appleY = apple[1];
+    </code></pre>
+    <p>Use these checks to analyze what to do next. For example, dodge either left or right if a block or snake block is in front, otherwise, move towards apple</p>
+    <p>Be warned that coding an AI or even understanding the code above takes a large quantity of coding experience. Send me a link to a code Repo or Repl and you might get featured</p>
+    <h3>Misc</h3>
+    <h4>Checking room type</h4>
+    <pre><code>
+      rooms[roomkey].type = "normal" || 'redgreen' || 'small' || 'fog' || 'tag';
+      //room type affects the rules that the bot has to constrain to. To fully understand each room type, play one of them and read the "how to play".
+    </code></pre>
+    <h4>Checking if snake should freeze in redgreen mod</h4>
+    <pre><code>
+      //color of light is stored in the following:
+      rooms[roomkey].color = "yellow" || 'red' || 'green';
+      // green you can move around, yellow will turn to red, red you die if you move.
+      //stop moving by changing snake frozen attribute;
+      rooms[roomkey].frozen = true || false;
+    </code></pre>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+  document.querySelectorAll('pre code').forEach((el) => {
+    hljs.highlightElement(el);
+  });
+});
+    </script>
+  </body>
+</html>

@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    
+
+
+<!-- AdinPlay Ads -->
+<script>
+var aiptag = aiptag || {};
+aiptag.cmd = aiptag.cmd || [];
+aiptag.cmd.display = aiptag.cmd.display || [];
+aiptag.cmd.player = aiptag.cmd.player || [];
+
+//CMP tool settings
+aiptag.cmp = {
+	show: true,
+	position: "centered",  //centered or bottom
+	button: true,
+	buttonText: "Privacy settings",
+	buttonPosition: "bottom-left" //bottom-left, bottom-right, top-left, top-right
+}
+</script>
+    <script async src="//api.adinplay.com/libs/aiptag/pub/MLS/multisnake.xyz/tag.min.js"></script>
     <link rel = "canonical" href = "https://multisnake.xyz/play">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -14,8 +32,6 @@
     <link rel = "icon" href= "multisnake-favicon.png">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
-        <script src="script.js"></script>
-
     <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
 <script>
@@ -25,25 +41,22 @@
 
   gtag('config', 'G-DBKFRBYTHY');
 </script>
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "8kaopfbqyx");
-</script>
+
+
 <script>
   var socket = io();
 </script>
   </head>
   <body id = "body">
-    <div id = "loading">
+    <div id="preroll"></div>
+    <div id = "loading" style = "display: none">
       <img src = "loading.gif">
       <div class = "tip" id = "tip">&nbsp;
       </div>
       <script>
+        window._GAME = {};
         getTip();
-        window.game.tipinterval = setInterval(getTip,3000);
+        window._GAME.tipinterval = setInterval(getTip,3000);
         function getTip(){
           var tips = [
               "Use the SPACE key to boost!",
@@ -89,6 +102,56 @@
     <table id = "table"></table>
     </div>
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script>
+  aiptag.cmd.player.push(function() {
+	aiptag.adplayer = new aipPlayer({
+		AD_WIDTH: window.innerWidth,
+		AD_HEIGHT: window.innerHeight,
+		AD_FULLSCREEN: true,
+		AD_CENTERPLAYER: true,
+		LOADING_TEXT: 'loading...',
+		PREROLL_ELEM: function(){return document.getElementById('preroll')},
+		AIP_COMPLETE: function (evt)  {
+      var s = document.createElement('script');
+      s.src = '/script.js';
+      document.body.appendChild(s);
+    		},
+		AIP_REMOVE: function ()  {
+
+      
+    }
+	});
+});
+
+//check if the adslib is loaded correctly or blocked by adblockers etc.
+if(new Date().getTime() - localStorage.getItem('lastad') >= 250000){
+  if (typeof aiptag.adplayer !== 'undefined') {
+    aiptag.cmd.player.push(function() { aiptag.adplayer.startPreRoll(); });
+  } else {
+    var s = document.createElement('script');
+        s.src = '/script.js';
+
+        document.body.appendChild(s);
+  }
+  localStorage.setItem('lastad',new Date().getTime());
+}else if(!localStorage.getItem('lastad')){
+  if (typeof aiptag.adplayer !== 'undefined') {
+	aiptag.cmd.player.push(function() { aiptag.adplayer.startPreRoll(); });
+} else {
+  var s = document.createElement('script');
+      s.src = '/script.js';
+
+      document.body.appendChild(s);
+}
+localStorage.setItem('lastad',new Date().getTime());
+}else{
+  var s = document.createElement('script');
+      s.src = '/script.js';
+
+      document.body.appendChild(s);
+}
+
+</script>
 
   </body>
 </html>

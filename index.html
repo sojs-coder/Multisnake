@@ -3,6 +3,7 @@
   
   <meta charset="UTF-8">
   <link rel = "canonical" href = "https://multisnake.xyz">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.3.0/lightgallery.es5.min.js" integrity="sha512-aloRukU8p8Cp8M7cz0EE2GJW2GHRXb+RY1T8OcJ6SxHIgghCRlYnxf7labEYkl0npZiM2aeW7UXRMnzeJFGqNg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
    <link rel = "icon" href= "multisnake-favicon.png">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
@@ -36,6 +37,7 @@
       <div class = "form" action = "/play" id = "form">
         <input type = "text" id = "username" name = "username" placeholder="Bob Joe" autofocus>
         <button type = "button" id = "join">Join</button>
+        <p style = 'color: #aaa'><b>New!</b> AI bots -<a href = '/AI/docs'>create your own</a>- Bots are <span style = 'color: #800080;font-weight: bold;'>purple</span>- <i>Scroll to see full changelog.</i></p>
         <div id = "room-box">
           <div id = "rooms-plain"></div>
           <div id = "rooms-mods"></div>
@@ -52,19 +54,19 @@
   <div class = "content">
     <h3 id = "welcome_to_multisnake">Welcome to MultiSnake</h3>
     <h4>What is MultiSnake?</h4>
-    <p>MultiSnake is an incredibly easy to play multiplayer snake game. Proggrammed in node.js, HTML, CSS, and Javascript with Replit, you can join different rooms and play different mods. Use WASD or the arrow keys to move around the map, and the space bar to use your boost</p>
-    <p><strong>MultiSnake is the worlds first multiplayer snake</strong>. MultiSnake is not a knock-off like slither.io, or powerline.io, but it is <strong>truly, at its core, a snake game.</strong> There is only ever one apple on the map, and player have to race to get to it. Of course, classic snake is not enough, so we added a couple twists:
+    <p>MultiSnake is an incredibly easy to play multiplayer snake game. Programmed in node.js, HTML, CSS, and Javascript with Replit, you can join different rooms and play different mods. Use WASD or the arrow keys to move around the map, and the space bar to use your boost</p>
+    <p><strong>MultiSnake is the worlds first multiplayer snake</strong>. MultiSnake is not a knock-off like slither.io, or powerline.io, but it is <strong>truly, at it's core, a snake game.</strong> There is only ever one apple on the map, and players have to race to get to it. Of course, classic snake is not enough, so we added a couple twists:
     </p>
       <p><ul>
-        <li>Different Game Mods including a small and fog versions.</li>
+        <li>Different Game Mods including small map, fog, tag, redlight, and classic</li>
         <li>Blocks that spawn to block you</li>
-        <li>Fun automatically generated usenames like "PinkDuck45" (but dont worry, you can still choose custom ones)</li>
+        <li>Fun automatically generated usernames like "PinkDuck45" (but don't worry, you can still choose custom ones)</li>
       </ul></p>
-      <p>Becuase MultiSnake is a multiplayer game, there are a lot of strategies that one can use. Here are a couple good ones that will never fail you, and a couple advanced ones for the serious gamer. Here are some good general guidlines:
+      <p>Because MultiSnake is a multiplayer game, there are a lot of strategies that one can use. Here are a couple good ones that will never fail you, and a couple advanced ones for the serious gamer. Here are some good general guidelines:
         <ul>
           <li><p><b>Twisting:</b> we all know that sometimes it is impossible to get the apple. There will be times where 3 snakes will all run at it and they will all die. To take advantage of that, navigate to a clear spot on the map and coil you body around and around until their is an opening for you to jump in an take the apple. Then go back to twisting and wait some more.</p></li>
-          <li><p><b>Kamikaze:</b> sometimes its just so hopeless. You keep dying over and over. A snake is at 8 apples and about to win. Here is what you do. It is all about timing. Get one apple to boost with and get right in front of the other snakes path. Dont mind your own life. Your only goal here is to beat the other snake. Boost at just the right moment and he'll never know what hit him</p></li>
-          <li><p><b>Phasing:</b> this technique needs a lot of practice to master. Spawn some apples by eating 5 or so apples. This trick is also about timing, and is mostly instinctive. Get to the a square right next to a block and smash the boost button (space bar). If you timed it right, you'll "phase" through the block. In a real game, you can use this to escape other snakes trying to kill you, and blocks will no longer be a problem.</p></li>
+          <li><p><b>Kamikaze:</b> sometimes it's just so hopeless. You keep dying over and over. A snake is at 8 apples and about to win. Here is what you do. It is all about timing. Get one apple to boost with and get right in front of the other snakes path. Don't mind your own life. Your only goal here is to beat the other snake. Boost at just the right moment and he'll never know what hit him</p></li>
+          <li><p><b>Phasing:</b> this technique needs a lot of practice to master. Spawn some apples by eating 5 or so apples. This trick is also about timing, and is mostly instinctive. Get to  square right next to a block and smash  boost button (space bar). If you timed it right, you'll "phase" through the block. In a real game, you can use this to escape other snakes trying to kill you, and blocks will no longer be a problem.</p></li>
         </ul>
       </p>
       <h4>How to play different game modes</h4>
@@ -73,10 +75,179 @@
         </li>
         <li><b>Small-</b> the same rules as the public rooms, but you no blocks spawn and the map is a lot smaller</li>
         <li><b>Fog- </b> same rules as public, but blocks do not spawn, and fog does. You can not see other players in the fog.</li>
+        <li><b>Redlight- </b> original idea was by <a href ="https://replit.com/@rickysong">@rickyson</a>, and he said to do something from squidgame. Luckily, the game redlight greenlight is in the public domain, so I can use it. Hold the spacebar to freeze your snake when the light becomes red. It will turn yellow first, though, so you have time to react. Get to ten apples to win. If you are not frozen when the light turns red, you die!</li>
         <li><b>Tag-</b> Eat an apple to become "it" and turn yellow! Tag other people to kill them! Walls will not spawn. Get to ten apples to win!</li></ul></p>
       <h4>Game Credits</h4>
       <p>Thanks to <a href = "https://replit.com/@Coder100">@Coder100</a> for helping with bugs back in beta. Thank you to <a href = "https://replit.com/@PYer">@PYer</a> for coming up with ideas for mods. Thank you to <a href = "https://replit.com/@ch1ck3n">@ch1ck3n</a> for helping with speed of the game. Thank you to <a href = "https://replit.com/@rickysong">@rickysong</a> and <a href = "https://socialrumbles.com/@Dheirya_Tyagi_CEO">@Redman</a> for helping with testing. Lastly, thank you to the entire discord community for the support and helping to find bugs!</p>
-    <footer>&copy 2021-<script>document.write(new Date().getFullYear())</script> <a href= "https://sojs.dev">SoJS</a> | <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> | <a href= "https://replit.com/@sojs">Repl.it</a> | <a href = "https://discord.gg/Np7vBvEtp2">Discord</a> | <a href = "https://github.com/sojs-coder/Multisnake">Github</a></footer>
+      <h2>Why was MultiSnake made?</h2>
+      <p><i>A message from the creator</i></p>
+      <p>I have been programming computers for 5 years, as of writing this. It was really a challenge for me, as I wanted to create a game without using HTML canvas or any game engines. (The real reason for this is because I wanted to not have to figure out a whole new thing). I had my javascript methods, my logic, and the skill that comes with 5 years of coding. This originally started off as a <a href = "https://impossible-snake.sojs.dev">single player snake game</a>, where you run around and avoid monsters that try and eat you.</p>
+      <p>I had already made a chatroom, and I thought "what if I put into practice what I learned from that project, and use it to make a multiplayer game?". So I did. After hours of reading tutorials later, I had a nice stream of data set up. My client could communicate with the server, the server could respond. I did not have to mess around to much initially with the front end, as I copied and pasted the game set up from that first snake game.</p>
+      <p>A thousand lines of code later, I had a horribly styled homepage, and a fully working multiplayer game framework. Player picked their usernames and the room that they wanted to join, and they were in. They could play around, and that was it.</p>
+      <p>There was one problem. The game was slow. I spent long hours trying to figure out how to fix it, and then it came upon me. In the code, I had a function that was called every 100ms. That's 10 times a second. Not very fast, but coupled with the fact that I was looping through an array of 10K per room in every function called, and this with the fact that I had 4 logic functions, I was looping through ~40K times every 100ms. That is a lot to be done in 100ms. And not only that, but I then had to send it over to the client, another 10 or so milliseconds gone. I was lagging hard. As <a href = "https://replit.com/@Wheysted">@Wheysted</a> put it, 
+      <div class = "img-container" style = "text-align: center"></p><img src = "/comment.png" alt = "If this were COD, I would be lag ragging all day!" /></div>
+      <p>I set to work. I consolidated all the loops into one and changed the game logic so the functions were called only 10K times a room. Still not good. I changed up the logic on when the snake dies. What I was doing was just changing the value of the snake to <code>"dead_snake"</code>. But this did not work well. Soon my code was polluted with <code>"dead_snake"</code>s all over the place. Not good. I then totally turned the game upside down and changed it to deleting the snake when it dies. This was a lot harder than you might think, but I managed. There. Now it only loops ~5 times per room. A lot better.</p>
+      <p>A while later, I had the first mod, and the stylesheet was greatly improved. The mod was called "small", and I was very impressed at what I could do. So, I set to work. Because of the way I built it, it was super easy to just add a couple lines of code and change up the logic to create new mods. So I spit them out. I was pulling mods out of my pockets left and right, one every week. But then.</p>
+      <p>I went of repl.it trending</p>
+      <p>:sad_face:</p>
+      <p>But that didn't stop me. I kept going. I spit out the redlight greenlight mod. And that's when I realized that every time I added a new mod, my game lost speed. I stopped. I thought. I thought some more.</p>
+      <h3>Where we are now</h3>
+      <p>I am currently rewriting all ~3K lines of multisnake code to make it more efficient, readable, and less time-consuming. Oh, and Im adding ads.</p>
+      <p>:evil_smiley_face:</p>
+      <h2>Changelog</h2>
+      <div class = "changelog">
+        <div class = "log" id = "1.0.0">
+          <div class = "log-title">
+            <div class = "log-version-number">1.0.0</div>
+            <div class = "log-tags">[First][yay][lets-go-party]</div>
+            <div class = "log-time">A while ago</div>
+          </div>
+          <div class = "log-des">
+            Got the first version of multisnake to work. Its nice and ugly, but whatever. The code is all there.
+          </div>
+        </div>
+        <div class = "log" id = "1.2.0">
+          <div class = "log-title">
+            <div class = "log-version-number">1.2.0</div>
+            <div class = "log-tags">[Update][Huge][stylesheet][fog_of_war][small_map]</div>
+            <div class = "log-time">9.29.21</div>
+          </div>
+          <div class = "log-des">
+            Huge new update! <br>
+            <br>Chat now works!
+            <img src = "multisnake-logs-images/chat(1).png" alt = "chat">
+            <a href = "https://multisnake.sojs.dev/">https://multisnake.sojs.dev</a> now redirects to <a href = "https://multisnake.xyz/">https://mulitsnake.xyz</a> without problem. 
+            <img src = "multisnake-logs-images/redirecting-to.png" alt = "redirecting to multisnake.xyz">
+            The two highly talked about mods have finally been released! <br>
+            <b>FOG OF WAR</b>
+            <img src = "multisnake-logs-images/fog_of_war.png" alt = "fog of war">
+            Fog is generated as the game goes. You cannot see other people in it. Have fun! <br>
+            <b>SMALL MAP</b><br>
+            <img src = "multisnake-logs-images/small-map.png">
+            A tiny little map. <br> 
+            <i>Note: No obstacles spawn on mods.</i><br>
+            New Update also includes: new stylesheet
+            <img src = "multisnake-logs-images/new-stylesheet-1.2.0.png">
+            (don't worry, you still type in your username)
+            <img src = "multisnake-logs-images/new-stylesheet-1.2.0(1).png">
+            
+
+            <b>SOON TO COME:</b>
+            <br>Bots - I will be making a website where you can make your own and submit them. That way, there will always be people to play against. You will know that they are a bot because their username will be [BOT].bot name. (Made by .username.), where people who submit a bot choose the name. <br>
+            <b>MORE THAT CAME OUT IN THE UPDATE:</b><br>
+            <i>an API!!!</i>
+            <br>This can be used to make a variety of projects. It is currently used in the site to tell how many people are online Currently its only endpoint it <a href = "https://multisnake.xyz/api/v1/rooms">https://multisnake.xyz/api/v1/rooms</a> that gives you a nice list of rooms, their names, the people in them, the quantity of snakes in them, the type of room, the last time it was visited, and more!
+          </div>
+        </div>
+        <div class = "log" id = "1.2.1">
+          <div class = "log-title">
+            <div class = "log-version-number">1.2.1</div>
+            <div class = "log-tags">[Update][Not-that-incredible][bugfix]</div>
+            <div class = "log-time">9.30.21</div>
+          </div>
+          <div class = "log-des">
+            - new styling for game page. <br>
+            - online counter from <a href = "#1.2.0">1.2.0</a> now works. <br>
+            Images of  styling:
+            <img src =  "multisnake-logs-images/chat.png">
+            <img src =  "multisnake-logs-images/chat-2.png">
+          </div>
+        </div>
+        <div class = "log" id = "1.2.2">
+          <div class = "log-title">
+            <div class = "log-version-number">1.2.2</div>
+            <div class = "log-tags">[Update][new][Not-that-incredible][bugfix]</div>
+            <div class = "log-time">10.1.21</div>
+          </div>
+          <div class = "log-des">
+            - fixed online counter on fog and small maps
+          </div>
+        </div>
+        <div class = "log" id = "1.2.3">
+          <div class = "log-title">
+            <div class = "log-version-number">1.2.3</div>
+            <div class = "log-tags">[Update][new][accessibility]</div>
+            <div class = "log-time">10.1.21</div>
+          </div>
+          <div class = "log-des">
+            - the snake colors are now more contrasting for the color blind.
+          </div>
+        </div>
+        <div class = "log" id = "1.3.3">
+          <div class = "log-title">
+            <div class = "log-version-number">1.3.3</div>
+            <div class = "log-tags">[UPDATE][new][MOD][STYLESHEET]</div>
+            <div class = "log-time">10.21.21</div>
+          </div>
+          <div class = "log-des">
+            Hey everyone! Huge new update here! This one includes:
+            <ul>
+              <li>Push to cloudflare (more secure and faster for you)</li>
+              <li>New loading screen + tips</li>
+              <li>New homepage with fancy bouncing arrow animation <del>not from codepen</del></li>
+              <li>Tips and tricks if ya click that down arrow!</li>
+              <li><b>[mod]</b> A new mod! TAG mode! Eat apples to become "it" and tag other players to kill them!w Get to ten to win! Wow!!</li>
+              <li>Put a boot onto the repl- even faster now!</li>
+            </ul>
+            Cool photos and videos of the update below.
+            <video src = "multisnake-logs-images/new-text.webm" controls>Uh oh! The video wont load!</video>
+            <img src  = "multisnake-logs-images/loading-screen.png">
+            <img src = "multisnake-logs-images/text-update.png">
+          </div>
+        </div>
+        <div class = "log" id = "1.3.4">
+          <div class = "log-title">
+            <div class = "log-version-number">1.3.4</div>
+            <div class = "log-tags">[BUGFIX][new][wierd replit bug thingy]</div>
+            <div class = "log-time">10.27.21</div>
+          </div>
+          <div class = "log-des">
+            - the game runs now. Files got corrupted when committing to github through replit.
+          </div>
+        </div>
+        <div class = "log" id = "1.4.5">
+          <div class = "log-title">
+            <div class = "log-version-number">1.4.5</div>
+            <div class = "log-tags">[UPDATE][new][mod][REDLIGHT_GREENLIGHT][code_readability]</div>
+            <div class = "log-time">11.02.21</div>
+          </div>
+          <div class = "log-des">
+            Hiya everyone!
+            <br>
+            Just released another mod, super excited for that!! This one was suggested by <a href = "https://replit.com/@rickysong">@rickysong</a>, and it is a lot of fun! It is the same concept as classic snake, but you have to freeze when the light turns red otherwise you'll die! Don't worry though- the light will turn yellow first so you know to smash the spacebar down and hold it there until it goes back to green. It's a lot of fun, go try it out. <br>
+            Also, the readablity of the code has been greatly increased, and I have explained in comments throughout what each line does, so you can go and understand it.
+            <br>
+            The next update will be huge. I am rewriting all of multisnakes code to make it faster and more efficient, but it will take time, so be patient.
+            <video src = "multisnake-logs-images/redlight.webm" controls>Uh no! This video wont load!</video>
+
+          </div>
+        </div>
+        <div class = "log" id = "1.4.6">
+          <div class = "log-title">
+            <div class = "log-version-number">1.4.6</div>
+            <div class = "log-tags">[UPDATE][new][changelog]</div>
+            <div class = "log-time">11.14.21</div>
+          </div>
+          <div class = "log-des">
+            - Added a changelog and updated the text. This took so long.
+            <img src = "multisnake-logs-images/changelog.png">
+          </div>
+        </div>
+        <div class = "log" id = "1.4.7">
+          <div class = "log-title">
+            <div class = "log-version-number">1.4.7</div>
+            <div class = "log-tags">[UPDATE][new][bots][AI][REDLIGHT_GREENLIGHT][CLASSIC][SMALL][FOG]</div>
+            <div class = "log-time">3.2.22</div>
+          </div>
+          <div class = "log-des">
+              Bots now play with you with an incredible AI, they're hard to beat!<br>
+            Want to sumbit your own AI? View our <a href = '/AI/docs'>docs</a>.
+            <img src = "multisnake-logs-images/bots.png">
+          </div>
+        </div>
+      </div>
+  <footer >&copy 2021-<script>document.write(new Date().getFullYear())</script> <a href= "https://sojs.dev">SoJS</a> | <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> | <a href= "https://replit.com/@sojs">Repl.it</a> | <a href = "//discord.gg/Np7vBvEtp2">Discord</a> | <a href = "https://github.com/sojs-coder/Multisnake">Github</a></footer>
+  
   </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src = "/home.js"></script>
